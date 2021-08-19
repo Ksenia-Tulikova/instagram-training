@@ -1,0 +1,265 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300);
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.header, .footer {
+    flex-grow: 0;
+    height: 10%;
+    background-color: aquamarine;
+}
+
+.container {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    flex-grow: 1;
+}
+
+.container .column {
+    flex-grow: 1;
+    flex-basis: 25%;
+}
+
+.container main.column {
+    flex-grow: 30;
+
+}
+
+.column-1 {
+    background-color: blueviolet;
+}
+
+.column-2 {
+    background-color: lightgreen;
+}
+
+.column-3 {
+    background-color: hotpink;
+}
+
+.login, .sign-up, .home {
+    width: 420px;
+    background: #ffffff;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.home {
+    background: linear-gradient(90deg, #04DFBD, #00FCD1);
+    height: 54%;
+
+    -webkit-animation: rotate-center 1.6s ease-in-out both;
+    animation: rotate-center 1.6s ease-in-out both;
+}
+
+.login .form, .sign-up .form {
+    display: block;
+    position: relative;
+}
+
+.login .form h2, .sign-up .form h2 {
+    background: #f5f5fa;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0 0 30px 0;
+    padding: 40px;
+    font-weight: 200;
+    color: #9596A2;
+    font-size: 19px;
+}
+
+.login .form .form-field, .sign-up .form .form-field {
+    display: flex;
+    align-items: center;
+    height: 55px;
+    margin: 0 40px 30px 40px;
+    border-bottom: 1px solid #9596A2;
+}
+
+.login .form .form-field label, .sign-up .form .form-field label {
+    width: 10px;
+    padding: 0 15px 0 0;
+    color: #9596A2;
+}
+
+.login .form .form-field input, .sign-up .form .form-field input {
+    width: 100%;
+    background: transparent;
+    color: #9596A2;
+    padding: 15px;
+    border: 0;
+    margin: 0;
+}
+
+.login .form .form-field input:focus, .sign-up .form .form-field input:focus {
+    outline: none;
+}
+
+.login .form .button, .sign-up .form .button {
+    width: 100%;
+    position: relative;
+    cursor: pointer;
+    box-sizing: border-box;
+    padding: 0 40px 45px 40px;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    outline: none;
+}
+
+.login .form .button .arrow-wrapper, .sign-up .form .button .arrow-wrapper {
+    transition: all 0.45s ease-in-out;
+    position: relative;
+    margin: 0;
+    width: 100%;
+    height: 55px;
+    right: 0;
+    float: right;
+    background: linear-gradient(90deg, #04DFBD, #00FCD1);
+    box-shadow: 0 3px 20px rgba(0, 252, 209, 0.4);
+    border-radius: 12px;
+}
+
+.login .form .button:hover .button-text, .sign-up .form .button:hover .button-text {
+    transition: 1.5s color;
+    color: black;
+}
+
+.login .form .button .arrow-wrapper .arrow, .sign-up .form .button .arrow-wrapper .arrow {
+    position: absolute;
+    top: 50%;
+    margin: auto;
+    right: 35px;
+    width: 15px;
+    height: 2px;
+    background: none;
+    transform: translateY(-50%);
+
+}
+
+.login .form .button .arrow-wrapper .arrow:before, .sign-up .form .button .arrow-wrapper .arrow:before {
+    position: absolute;
+    content: '';
+    top: -4px;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    border-top: 2px solid #fff;
+    border-right: 2px solid #fff;
+    transform: rotate(45deg);
+}
+
+.login .form .button .button-text, .sign-up .form .button .button-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    color: #fff;
+    line-height: 55px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.login .form-login-error {
+    display: none;
+}
+
+.login .error .form-login-error {
+    color: red;
+    display: block;
+}
+
+.login .error .form-login-invitation {
+    display: none;
+}
+
+.sign-up .error-message {
+    position: absolute;
+    color: red;
+    width: 100%;
+    font-size: 10px;
+    font-style: italic;
+}
+
+.sign-up .login-error-message {
+    top: 35%;
+}
+
+.sign-up .password-error-message {
+    top: 52%;
+}
+
+.sign-up .repeat-password-error-message {
+    top: 70%;
+}
+
+.finished {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 7;
+}
+
+.finished img.finished-icon, .finished img.finished-icon {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: white;
+    opacity: 0;
+    transition: all .3s ease-in-out 1.5s;
+}
+
+.home .finished img.finished-icon, .active .finished img.finished-icon {
+    opacity: 1;
+}
+
+@-webkit-keyframes rotate-center {
+    0% {
+        -webkit-transform: translate(-50%, -50%) rotate(0) ;
+        transform: translate(-50%, -50%) rotate(0) ;
+    }
+    100% {
+        -webkit-transform: translate(-50%, -50%) rotate(360deg) ;
+        transform: translate(-50%, -50%) rotate(360deg) ;
+    }
+}
+@keyframes rotate-center {
+    0% {
+        -webkit-transform: translate(-50%, -50%) rotate(0) ;
+        transform: translate(-50%, -50%) rotate(0) ;
+    }
+    100% {
+        -webkit-transform: translate(-50%, -50%) rotate(360deg) ;
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+
+
+
+
+
