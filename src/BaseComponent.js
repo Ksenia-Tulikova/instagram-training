@@ -43,7 +43,7 @@ export const TEMPLATES = {
                 <div class="form-field">
                     <label for="sign-up-password-repeat"><i class="fas fa-lock"></i></label>
                     <input id="sign-up-password-repeat" type="password" name="repeat-password" placeholder="Repeat password" value="{repeatPassword.value}">
-                    <span class="error-message repeat-password-error-message">{repeatPassword.errorMessage}</span>
+                    <span class="error-message repeatPassword-error-message">{repeatPassword.errorMessage}</span>
                 </div>
                 <button type="submit" class="button button-sign-up">
                     <div class="arrow-wrapper">
@@ -82,8 +82,30 @@ export class BaseComponent {
         }
     }
 
-    renderTemplate(html) {
-        this.place.innerHTML = html;
+    get(state, path) {
+
+        let pathSplited = path.split('.');
+
+        let result = state;
+        for (const fieldName of pathSplited) {
+            result = result[fieldName];
+        }
+
+        return result;
+    }
+
+    render(state) {
+
+        let htmlToRender = this.htmlTemplate;
+        let paths = new Set(this.htmlTemplate.match(/(?<={)(.+?)(?=})/g));
+
+        if (paths) {
+            paths.forEach((path) => {
+                htmlToRender = htmlToRender.replaceAll(`{${path}}`, this.get(state, path));
+            })
+        }
+
+        this.place.innerHTML = htmlToRender;
         this.updateEventListeners();
     }
 }

@@ -5,7 +5,6 @@ export class PageResolver {
     }
 
     goTo(pageName) {
-        // this.pageMapping[pageName].controller.connect(this.place);
         this.pageMapping[pageName].controller.connect();
     }
 }

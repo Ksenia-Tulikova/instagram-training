@@ -66,13 +66,10 @@ export class LoginController {
 
     updateLogin(value) {
         this.modifyState(state => state.login.value = value);
-        this.view.render(this.state);
-
     }
 
     updatePassword(value) {
         this.modifyState(state => state.password.value = value);
-        this.view.render(this.state);
     }
 
     submit() {
@@ -90,7 +87,7 @@ export class LoginController {
             pageResolver.goTo(pageResolver.pageMapping.home.name);
         } else {
             this.modifyState(state => state.validCredentials = !!value);
-            this.view.render(this.state);
+            this.view.updateValidCredentialsClass();
         }
     }
 

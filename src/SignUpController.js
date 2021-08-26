@@ -88,7 +88,9 @@ export class SignUpController {
 
         this.modifyState();
 
-        this.view.render(this.state);
+        this.view.updateErrorsView(this.state);
+
+        // this.view.render(this.state);
     }
 
     updatePassword(value) {
@@ -115,7 +117,9 @@ export class SignUpController {
 
         this.modifyState();
 
-        this.view.render(this.state);
+        this.view.updateErrorsView(this.state);
+
+        // this.view.render(this.state);
 
     }
 
@@ -143,7 +147,8 @@ export class SignUpController {
 
         this.modifyState();
 
-        this.view.render(this.state);
+        // this.view.render(this.state);
+        this.view.updateErrorsView(this.state);
 
     }
 
@@ -171,7 +176,8 @@ export class SignUpController {
                 }
             })
 
-            this.view.render(this.state);
+            // this.view.render(this.state);
+            this.view.updateErrorsView(this.state);
         }
 
     }
