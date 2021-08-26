@@ -1,5 +1,6 @@
 import {authManager, pageResolver, validator} from "./app.js";
-import {PAGES} from "./PageResolver.js";
+import {SignUpComponent} from "./SignUpComponent";
+import {TEMPLATES} from "./BaseComponent";
 
 const initialState = {
     login: {
@@ -18,30 +19,47 @@ const initialState = {
 };
 
 export class SignUpController {
-
-    constructor() {
+    constructor(place) {
+        this.place = place;
         this.state = initialState;
         this.handlers = {
-            onLoginBlur: this._onLoginBlur.bind(this),
-            onPasswordBlur: this._onPasswordBlur.bind(this),
-            onSubmit: this._onSubmit.bind(this),
-            onRepeatPasswordBlur: this._onRepeatPasswordBlur.bind(this)
+            onLoginBlur: {
+                queryParam: 'input[name="login"]',
+                eventType:'blur',
+                callback: this._onLoginBlur.bind(this),
+            },
+            onPasswordBlur: {
+                queryParam: 'input[name="password"]',
+                eventType:'blur',
+                callback: this._onPasswordBlur.bind(this),
+            },
+            onRepeatPasswordBlur: {
+                queryParam: 'input[name="repeat-password"]',
+                eventType:'blur',
+                callback: this._onRepeatPasswordBlur.bind(this),
+            },
+            onSubmit:{
+                queryParam: '.button-sign-up',
+                eventType:'click',
+                callback: this._onSubmit.bind(this),
+            }
         };
     }
 
-    _onLoginBlur(login) {
-        this.updateLogin(login);
+    _onLoginBlur(event) {
+        this.updateLogin(event.target.value);
     }
 
-    _onPasswordBlur(password) {
-        this.updatePassword(password);
+    _onPasswordBlur(event) {
+        this.updatePassword(event.target.value);
     }
 
-    _onRepeatPasswordBlur(password) {
-        this.updateRepeatPassword(password);
+    _onRepeatPasswordBlur(event) {
+        this.updateRepeatPassword(event.target.value);
     }
 
-    _onSubmit() {
+    _onSubmit(event) {
+        event.preventDefault();
         this.submit();
     }
 
@@ -53,9 +71,9 @@ export class SignUpController {
         }
     }
 
-    connect(viewComponent) {
-        this.view = viewComponent;
-        this.view.render(this.state, this.handlers);
+    connect() {
+        this.view = new SignUpComponent(this.place, TEMPLATES.signUp, this.handlers);
+        this.view.render(this.state);
     }
 
     updateLogin(value) {
@@ -70,7 +88,7 @@ export class SignUpController {
 
         this.modifyState();
 
-        this.view.render(this.state, this.handlers);
+        this.view.render(this.state);
     }
 
     updatePassword(value) {
@@ -97,7 +115,8 @@ export class SignUpController {
 
         this.modifyState();
 
-        this.view.render(this.state, this.handlers);
+        this.view.render(this.state);
+
     }
 
     updateRepeatPassword(value) {
@@ -124,7 +143,8 @@ export class SignUpController {
 
         this.modifyState();
 
-        this.view.render(this.state, this.handlers);
+        this.view.render(this.state);
+
     }
 
     submit() {
@@ -142,16 +162,18 @@ export class SignUpController {
 
             this.modifyState(state => state.isLogged = true);
 
-            pageResolver.goTo(PAGES.home);
+            pageResolver.goTo(pageResolver.pageMapping.home.name);
+
         } else {
             this.modifyState(state => {
                 for (const fieldName in validationResult.errorMessages) {
                     state[fieldName].errorMessage = validationResult.errorMessages[fieldName];
                 }
             })
+
+            this.view.render(this.state);
         }
 
-        this.view.render(this.state, this.handlers);
     }
 
     modifyState(stateModifier) {

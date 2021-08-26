@@ -1,0 +1,16 @@
+{
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-invalid-regexp": "warn"
+  },
+  "env": {
+    "es6": true,
+    "browser": true
+  },
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "sourceType": "module"
+  }
+}

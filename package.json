@@ -1,0 +1,35 @@
+{
+  "name": "instagram_flex",
+  "version": "1.0.0",
+  "description": "Clone of Instagram app",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production",
+    "start": "webpack-dev-server --mode development --open"
+  },
+  "keywords": [
+    "training",
+    "project",
+    "JS"
+  ],
+  "author": "Ksenia Tulikova",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^6.2.0",
+    "eslint-loader": "^4.0.2",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.3.2",
+    "style-loader": "^3.2.1",
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0",
+    "webpack-dev-server": "^4.0.0"
+  },
+  "dependencies": {
+    "normalize.css": "^8.0.1"
+  }
+}
