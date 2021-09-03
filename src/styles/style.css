@@ -55,7 +55,7 @@ body {
     background-color: hotpink;
 }
 
-.login, .sign-up, .home {
+.login, .sign-up, .home, .edit-profile, .delete-profile, .users-table {
     width: 420px;
     background: #ffffff;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
@@ -67,6 +67,25 @@ body {
     transform: translate(-50%, -50%);
 }
 
+.users-table {
+    position: relative;
+    width: 100%;
+}
+
+.delete-profile {
+    opacity: 0;
+    display: none;
+    z-index: 25;
+    box-shadow: 0 20px 50px rgb(0 0 0);
+    border: 5px solid lightgray;
+    transition: opacity 2s;
+}
+
+.delete-profile.active {
+    display: block;
+    opacity: 1;
+}
+
 .home {
     background: linear-gradient(90deg, #04DFBD, #00FCD1);
     height: 54%;
@@ -75,12 +94,53 @@ body {
     animation: rotate-center 3s ease-in-out both;
 }
 
-.login .form, .sign-up .form {
+.edit-profile .form .form-field label {
+    width: 100%;
+    padding: 0 15px 0 0;
+    color: #9596A2;
+}
+
+.edit-profile .form .form-field select {
+    height: 65%;
+    width: 100%;
+    border: none;
+    padding: 0 15px 0 0;
+    color: #9596A2;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+}
+
+.edit-profile .form .form-field select option {
+    height: 100%;
+    box-sizing: border-box;
+    margin: 10px 0;
+}
+
+.edit-profile .form .button .arrow-wrapper .arrow,
+.users-table .form .button .arrow-wrapper .arrow {
+    position: absolute;
+    right: 10%;
+    top: 50%;
+    margin: auto;
+    right: 35px;
+    width: 15px;
+    height: 2px;
+    background: none;
+    transform: translateY(-50%);
+}
+
+.edit-profile-actions,
+.delete-profile-actions,
+.edit-user-actions {
+    display: flex;
+}
+
+.login .form, .sign-up .form, .edit-profile .form, .delete-profile .form {
     display: block;
     position: relative;
 }
 
-.login .form h2, .sign-up .form h2 {
+.login .form h2, .sign-up .form h2, .edit-profile h2, .delete-profile h2, .users-table h2 {
     background: #f5f5fa;
     display: block;
     box-sizing: border-box;
@@ -92,12 +152,23 @@ body {
     font-size: 19px;
 }
 
-.login .form .form-field, .sign-up .form .form-field {
+.delete-profile .form h2 {
+    text-align: center;
+    padding: 30px 40px;
+}
+
+.login .form .form-field, .sign-up .form .form-field, .edit-profile .form .form-field, .users-table .users-table-form .users-table-row {
     display: flex;
     align-items: center;
     height: 55px;
     margin: 0 40px 30px 40px;
     border-bottom: 1px solid #9596A2;
+}
+
+.users-table .users-table-form .users-table-row {
+    margin-left: 20px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .login .form .form-field label, .sign-up .form .form-field label {
@@ -106,20 +177,25 @@ body {
     color: #9596A2;
 }
 
-.login .form .form-field input, .sign-up .form .form-field input {
+.login .form .form-field input, .sign-up .form .form-field input, .edit-profile .form .form-field input,
+.users-table .users-table-form .user-login {
     width: 100%;
     background: transparent;
     color: #9596A2;
     padding: 15px;
     border: 0;
     margin: 0;
+    cursor: pointer;
+
 }
 
-.login .form .form-field input:focus, .sign-up .form .form-field input:focus {
+.login .form .form-field input:focus, .sign-up .form .form-field input:focus,
+.edit-profile .form .form-field input:focus {
     outline: none;
 }
 
-.login .form .button, .sign-up .form .button {
+.login .form .button, .sign-up .form .button, .edit-profile .form .button,
+.delete-profile .form .button, .users-table .users-table-form .button {
     width: 100%;
     position: relative;
     cursor: pointer;
@@ -131,7 +207,13 @@ body {
     outline: none;
 }
 
-.login .form .button .arrow-wrapper, .sign-up .form .button .arrow-wrapper {
+.users-table .users-table-form .button {
+    padding: 0 0 0 5px;
+}
+
+.login .form .button .arrow-wrapper, .sign-up .form .button .arrow-wrapper,
+.edit-profile .form .button .arrow-wrapper,
+.delete-profile .form .button .arrow-wrapper, .users-table .users-table-form .button .arrow-wrapper {
     transition: all 0.45s ease-in-out;
     position: relative;
     margin: 0;
@@ -144,12 +226,28 @@ body {
     border-radius: 12px;
 }
 
-.login .form .button:hover .button-text, .sign-up .form .button:hover .button-text {
+.users-table .users-table-form .button.button-delete-user .arrow-wrapper {
+    background: linear-gradient(90deg, #df0446, #fc002e);
+    box-shadow: 0 3px 20px rgba(252, 0, 80, 0.4);
+
+}
+
+.users-table .users-table-form .button .arrow-wrapper {
+    width: 100px;
+    height: 35px;
+}
+
+.login .form .button:hover .button-text, .sign-up .form .button:hover .button-text,
+.edit-profile .form .button:hover .button-text,
+.delete-profile .form .button:hover .button-text, .users-table .users-table-form .button:hover .button-text {
     transition: 1.5s color;
     color: black;
 }
 
-.login .form .button .arrow-wrapper .arrow, .sign-up .form .button .arrow-wrapper .arrow {
+.login .form .button .arrow-wrapper .arrow, .sign-up .form .button .arrow-wrapper .arrow,
+.edit-profile .form .button .arrow-wrapper .arrow,
+.delete-profile .form .button .arrow-wrapper .arrow,
+.users-table .users-table-form .button .arrow-wrapper .arrow {
     position: absolute;
     top: 50%;
     margin: auto;
@@ -161,7 +259,10 @@ body {
 
 }
 
-.login .form .button .arrow-wrapper .arrow:before, .sign-up .form .button .arrow-wrapper .arrow:before {
+.login .form .button .arrow-wrapper .arrow:before, .sign-up .form .button .arrow-wrapper .arrow:before
+.edit-profile .form .button .arrow-wrapper .arrow:before,
+.delete-profile .form .button .arrow-wrapper .arrow:before,
+.users-table .users-table-form .button .arrow-wrapper .arrow:before {
     position: absolute;
     content: '';
     top: -4px;
@@ -173,17 +274,25 @@ body {
     transform: rotate(45deg);
 }
 
-.login .form .button .button-text, .sign-up .form .button .button-text {
+.login .form .button .button-text, .sign-up .form .button .button-text,
+.edit-profile .form .button .button-text,
+.delete-profile .form .button .button-text,
+.users-table .users-table-form .button .button-text {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     padding: 0;
     margin: 0;
-    color: #fff;
+    color: #ffffff;
     line-height: 55px;
     text-align: center;
     text-transform: uppercase;
+}
+
+.users-table .users-table-form .button .button-text {
+    line-height: 35px;
+    font-size: 13px;
 }
 
 .login .form-login-error {
@@ -241,15 +350,121 @@ body {
     opacity: 1;
 }
 
+/*Разработка кастомного переключателя*/
+/*Стилизация переключателя (input с type="radio") выполняется аналогично, т.е. посредством тех же шагов которые мы применяли при кастомизации чекбокса.*/
+
+/*Вид стилизованного чекбокса в браузере по умолчанию и в состоянии checked*/
+/*Итоговый набор стилей для кастомного оформления input с type="radio":*/
+/*                                                                                                                        !* для элемента input c type="radio" *!*/
+.user-male > div {
+    box-sizing: border-box;
+    margin: 2px;
+    border: 1px solid #999;
+    border-radius: 6px;
+    width: 50%;
+}
+
+.user-male label {
+    padding-left: 5px;
+    margin: 0;
+    text-align: center;
+}
+
+.male_radio_btn {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.male_radio_btn input[type=radio] {
+    display: none;
+}
+
+.male_radio_btn label {
+    display: inline-block;
+    cursor: pointer;
+    padding: 0px 15px;
+    line-height: 34px;
+    user-select: none;
+}
+
+/* Checked */
+.male_radio_btn input[type=radio]:checked + label {
+    background: linear-gradient(90deg, #04DFBD, #00FCD1);
+    padding: 0;
+}
+
+/* Hover */
+.male_radio_btn label:hover {
+    color: #666;
+}
+
+/* Disabled */
+.male_radio_btn input[type=radio]:disabled + label {
+    background: #efefef;
+    color: #666;
+}
+
+/*datePicker*/
+label {
+    display: block;
+    font: 1rem 'Fira Sans', sans-serif;
+}
+
+input,
+label {
+    margin: .4rem 0;
+}
+
+.edit-profile .form .form-field label {
+    width: 100%;
+    padding: 0 15px 0 0;
+    color: #9596A2;
+}
+
+.edit-profile .form .form-field select {
+    height: 65%;
+    width: 100%;
+    border: none;
+    padding: 0 15px 0 0;
+    color: #9596A2;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+}
+
+.edit-profile .form .form-field select option {
+    height: 100%;
+    box-sizing: border-box;
+    margin: 10px 0;
+}
+
+.edit-profile .form .button .arrow-wrapper .arrow,
+.users-table .form .button .arrow-wrapper .arrow {
+    position: absolute;
+    right: 10%;
+    top: 50%;
+    margin: auto;
+    right: 35px;
+    width: 15px;
+    height: 2px;
+    background: none;
+    transform: translateY(-50%);
+}
+
+.edit-profile-actions,
+.delete-profile-actions,
+.edit-user-actions {
+    display: flex;
+}
+
 @-webkit-keyframes rotate-center {
     0% {
-        -webkit-transform: translate(-50%, -50%) rotate(0) ;
-        transform: translate(-50%, -50%) rotate(0) ;
+        -webkit-transform: translate(-50%, -50%) rotate(0);
+        transform: translate(-50%, -50%) rotate(0);
     }
 
     60% {
-        -webkit-transform: translate(-50%, -50%) rotate(360deg) ;
-        transform: translate(-50%, -50%) rotate(360deg) ;
+        -webkit-transform: translate(-50%, -50%) rotate(360deg);
+        transform: translate(-50%, -50%) rotate(360deg);
     }
 
     100% {
@@ -259,13 +474,13 @@ body {
 
 @keyframes rotate-center {
     0% {
-        -webkit-transform: translate(-50%, -50%) rotate(0) ;
+        -webkit-transform: translate(-50%, -50%) rotate(0);
         transform: translate(-50%, -50%) rotate(0);
         opacity: 1;
     }
 
     60% {
-        -webkit-transform: translate(-50%, -50%) rotate(360deg) ;
+        -webkit-transform: translate(-50%, -50%) rotate(360deg);
         transform: translate(-50%, -50%) rotate(360deg);
     }
 

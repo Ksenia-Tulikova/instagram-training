@@ -1,5 +1,5 @@
 export const TEMPLATES = {
-    login: `<div class="login ">
+  login: `<div class="login ">
             <form class="form validCredentials-{validCredentials}">
                 <h2>
                     <span class="form-login-invitation ">Hello</span>
@@ -27,7 +27,7 @@ export const TEMPLATES = {
                 </button>
             </form>
         </div>`,
-    signUp: `<div class="sign-up">
+  signUp: `<div class="sign-up">
             <form class="form">
                 <h2>Sign Up right now!</h2>
                 <div class="form-field">
@@ -53,7 +53,7 @@ export const TEMPLATES = {
                 </button>
             </form>
         </div>`,
-    home: `<div class="home active">
+  home: `<div class="home active">
             <div class="finished ">
                 <img
                     class="finished-icon"
@@ -62,50 +62,151 @@ export const TEMPLATES = {
                 >
             </div>
         </div>`,
-}
+  usersTable: `<div class="users-table ">
+    <div class="users-table-form">
+        <h2>
+            <span>Users</span>
+        </h2>
+        {users}
+    </div>
+</div>
+                 <div class="delete-profile ">
+                 <div class="form">
+        <h2>
+            <span class="delete-profile-invitation ">Are you sure?</span>
+        </h2>
+        <div class="delete-profile-actions">
+            <button type="button" class="button button-delete">
+                <div class="arrow-wrapper">
+                    <span class="arrow"></span>
+                </div>
+                <p class="button-text">YES</p>
+            </button>
+            <button type="button" class="button button-cancel">
+                <div class="arrow-wrapper">
+                    <span class="arrow"></span>
+                </div>
+                <p class="button-text">NO</p>
+            </button>
+        </div>
+    </div>
+               </div>`,
+  usersTableRow: `<div class="users-table-row">
+                    <div class="user-login">
+                        <span>{login}</span>
+                    </div>
+                    <div class="edit-user-actions"  data-user-id="{login}">
+                        <button type="button" class="button button-edit-user">
+                            <div class="arrow-wrapper">
+                                <span class="arrow"></span>
+                            </div>
+                            <p class="button-text">Edit</p>
+                        </button>
+                        <button type="button" class="button button-delete-user">
+                            <div class="arrow-wrapper">
+                                <span class="arrow"></span>
+                            </div>
+                            <p class="button-text">Delete</p>
+                        </button>
+                    </div>
+                </div>`,
+  editUser: `<div class="edit-profile ">
+            <div class="form">
+                <h2>
+                    <span class="edit-profile-invitation ">Edit {login} Profile</span>
+                </h2>
+                <div class="form-field user-male">
+                    <div class="male_radio_btn">
+                        <input id="man" type="radio" name="male" value="man" {male.man}>
+                        <label for="man">Man</label>
+                      </div>
+                       
+                      <div class="male_radio_btn">
+                        <input id="woman" type="radio" name="male" value="woman" {male.woman}>
+                        <label for="woman">Woman</label>
+                    </div>
+                </div>
+                    
+                <div class="form-field">
+                    <label for="dateOfBirth">Date of birth:</label>
+
+                    <input type="date" id="dateOfBirth" name="trip-start"
+                           value="{dateOfBirth}"
+                           min="1920-01-01" max="2050-12-31">
+                </div>
+                <div class="form-field">
+                    <label for="tel">Phone number:</label>
+                    <input type="tel" id="tel" name="tel" value="{tel}">
+                </div>
+                <div class="form-field">
+                    <select size="1" class="country-selector">
+                    <option value="" disabled selected>Choose your country:</option>
+                        {options}
+                    </select>
+                </div>
+                <div class="edit-profile-actions">
+                    <button type="button" class="button button-save">
+                        <div class="arrow-wrapper">
+                            <span class="arrow"></span>
+                        </div>
+                        <p class="button-text">SAVE</p>
+                    </button>
+                    <button type="button" class="button button-close">
+                        <div class="arrow-wrapper">
+                            <span class="arrow"></span>
+                        </div>
+                        <p class="button-text">CLOSE</p>
+                    </button>
+                </div>
+            </div>
+        </div>`,
+  option: `<option value="{country}" {optionSelected}>{country}</option>`,
+};
 
 export class BaseComponent {
-    constructor($formInsertPlace, htmlTemplate, handlers) {
-        this.place = $formInsertPlace;
-        this.handlers = handlers;
-        this.htmlTemplate = htmlTemplate;
+  constructor ($formInsertPlace, htmlTemplate, handlers) {
+    this.place = $formInsertPlace;
+    this.handlers = handlers;
+    this.htmlTemplate = htmlTemplate;
+  }
+
+  updateEventListeners () {
+    if (this.handlers) {
+      for (const handler in this.handlers) {
+        const handlerData = this.handlers[handler];
+        this.place.querySelectorAll(handlerData.queryParam).forEach(element => {
+          element.addEventListener(handlerData.eventType, (event) => {
+            handlerData.callback(event);
+          });
+        });
+      }
+    }
+  }
+
+  get (state, path) {
+
+    let pathSplited = path.split('.');
+
+    let result = state;
+    for (const fieldName of pathSplited) {
+      result = result[fieldName];
     }
 
-    updateEventListeners() {
-        if (this.handlers) {
-            for (const handler in this.handlers) {
-                const handlerData = this.handlers[handler];
-                this.place.querySelector(handlerData.queryParam).addEventListener(handlerData.eventType, (event) => {
-                    handlerData.callback(event);
-                });
-            }
-        }
+    return result;
+  }
+
+  render (state) {
+
+    let htmlToRender = this.htmlTemplate;
+    let paths = new Set(htmlToRender.match(/(?<={)(.+?)(?=})/g));
+
+    if (paths) {
+      paths.forEach((path) => {
+        htmlToRender = htmlToRender.replaceAll(`{${path}}`, this.get(state, path));
+      });
     }
 
-    get(state, path) {
-
-        let pathSplited = path.split('.');
-
-        let result = state;
-        for (const fieldName of pathSplited) {
-            result = result[fieldName];
-        }
-
-        return result;
-    }
-
-    render(state) {
-
-        let htmlToRender = this.htmlTemplate;
-        let paths = new Set(this.htmlTemplate.match(/(?<={)(.+?)(?=})/g));
-
-        if (paths) {
-            paths.forEach((path) => {
-                htmlToRender = htmlToRender.replaceAll(`{${path}}`, this.get(state, path));
-            })
-        }
-
-        this.place.innerHTML = htmlToRender;
-        this.updateEventListeners();
-    }
+    this.place.innerHTML = htmlToRender;
+    this.updateEventListeners();
+  }
 }

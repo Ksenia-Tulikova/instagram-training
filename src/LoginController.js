@@ -84,7 +84,7 @@ export class LoginController {
 
     updateIsAuthErrorStatus(value) {
         if(value) {
-            pageResolver.goTo(pageResolver.pageMapping.home.name);
+            pageResolver.goTo(pageResolver.pageMapping.usersTable.name);
         } else {
             this.modifyState(state => state.validCredentials = !!value);
             this.view.updateValidCredentialsClass();
