@@ -1,6 +1,5 @@
 import { EditUserComponent } from './EditUserComponent';
-import { authManager, pageResolver } from './app';
-import { TEMPLATES } from './BaseComponent';
+import { authManager, router } from './app';
 
 export class EditUserController {
   constructor (place) {
@@ -58,21 +57,20 @@ export class EditUserController {
 
   save () {
     authManager.updateUser(this.state);
-    pageResolver.goTo(pageResolver.pageMapping.usersTable.name);
+    router.changeRoute('/users');
+    // pageResolver.goTo(pageResolver.pageMapping.usersTable.name);
   }
 
   close () {
-    pageResolver.goTo(pageResolver.pageMapping.usersTable.name);
+    router.changeRoute('/users');
+
+    // pageResolver.goTo(pageResolver.pageMapping.usersTable.name);
   }
 
   connect (params) {
-    const templatesConfig = {
-      default: TEMPLATES.editUser,
-      additional: TEMPLATES.option
-    };
-
-    this.state = authManager.getUser(params.userId);
-    this.view = new EditUserComponent(this.place, templatesConfig, this.handlers);
+    console.log(params);
+    this.state = authManager.getUser(params.login);
+    this.view = new EditUserComponent(this.place, this.handlers);
     this.view.render(this.state);
   }
 

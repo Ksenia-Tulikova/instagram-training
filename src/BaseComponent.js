@@ -161,6 +161,9 @@ export const TEMPLATES = {
             </div>
         </div>`,
   option: `<option value="{country}" {optionSelected}>{country}</option>`,
+  aboutUs: `<h2>
+            <span>{greeting}</span>
+        </h2>`
 };
 
 export class BaseComponent {

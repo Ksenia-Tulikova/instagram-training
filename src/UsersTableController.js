@@ -1,6 +1,5 @@
 import UsersTableComponent from './UsersTableComponent';
-import { TEMPLATES } from './BaseComponent';
-import { authManager, pageResolver } from './app';
+import { authManager, pageResolver, router } from './app';
 
 export class UsersTableController {
   constructor (place) {
@@ -25,8 +24,12 @@ export class UsersTableController {
     };
   }
 
-  editProfile (userId) {
-    pageResolver.goTo(pageResolver.pageMapping.editUser.name, { userId });
+  editProfile (userLogin) {
+    router.changeRoute(`/user?login=${userLogin}`);
+    // router.changeRoute('/user',{userId});
+
+
+    // pageResolver.goTo(pageResolver.pageMapping.editUser.name, { userId });
   }
 
   deleteUserClicked (userId) {
@@ -45,14 +48,9 @@ export class UsersTableController {
   }
 
   connect () {
-    const templatesConfig = {
-      default: TEMPLATES.usersTable,
-      additional: TEMPLATES.usersTableRow
-    };
-
     this.state.users = Object.values(authManager.getUsers());
 
-    this.view = new UsersTableComponent(this.place, templatesConfig, this.handlers);
+    this.view = new UsersTableComponent(this.place, this.handlers);
     this.view.render(this.state);
   }
 

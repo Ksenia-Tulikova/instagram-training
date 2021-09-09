@@ -1,16 +1,17 @@
-import { BaseComponent } from './BaseComponent';
+import { BaseComponent, TEMPLATES } from './BaseComponent';
 
 export default class UsersTableComponent extends BaseComponent {
-  constructor ($tableInsertPlace, htmlTemplatesConfig, handlers) {
+  constructor ($tableInsertPlace, handlers) {
     super($tableInsertPlace, undefined, handlers);
-    this.htmlTemplateConfig = htmlTemplatesConfig;
+    this.htmlTemplate = TEMPLATES.usersTable;
+    this.htmlTemplateUserRow = TEMPLATES.usersTableRow;
   }
 
   render (state) {
-    let htmlToRender = this.htmlTemplateConfig.default;
+    let htmlToRender = this.htmlTemplate;
 
     const usersHtml = state.users.map(user => (
-      this._fillUserTemplateWithData(this.htmlTemplateConfig.additional, user)
+      this._fillUserTemplateWithData(this.htmlTemplateUserRow, user)
     )).join('');
 
     htmlToRender = htmlToRender.replaceAll(`{users}`, usersHtml);
@@ -26,13 +27,13 @@ export default class UsersTableComponent extends BaseComponent {
   }
 
   _fillUserTemplateWithData (template, user) {
-    let htmlUserRow = template;
-    const paths = new Set(htmlUserRow.match(/(?<={)(.+?)(?=})/g));
+    let html = template;
+    const paths = new Set(html.match(/(?<={)(.+?)(?=})/g));
 
     paths.forEach((path) => {
-      htmlUserRow = htmlUserRow.replaceAll(`{${path}}`, super.get(user, path));
+      html = html.replaceAll(`{${path}}`, super.get(user, path));
     });
 
-    return htmlUserRow;
+    return html;
   }
 }

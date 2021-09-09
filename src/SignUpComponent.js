@@ -1,8 +1,9 @@
-import {BaseComponent} from "./BaseComponent";
+import { BaseComponent, TEMPLATES } from './BaseComponent';
 
 export class SignUpComponent extends BaseComponent {
-    constructor($formInsertPlace, htmlTemplate, handlers) {
-        super($formInsertPlace, htmlTemplate, handlers);
+    constructor($formInsertPlace, handlers) {
+        super($formInsertPlace,undefined, handlers);
+        this.htmlTemplate = TEMPLATES.signUp;
     }
 
     updateErrorsView(state) {

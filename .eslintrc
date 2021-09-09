@@ -1,7 +1,7 @@
 {
   "rules": {
     "no-unused-vars": "warn",
-    "no-invalid-regexp": "warn"
+    "no-invalid-regexp": "warn",
   },
   "env": {
     "es6": true,
@@ -11,6 +11,8 @@
     "eslint:recommended"
   ],
   "parserOptions": {
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaVersion": 2018,
+    "experimentalObjectRestSpread": true
   }
 }

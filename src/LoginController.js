@@ -1,6 +1,5 @@
-import {authManager, pageResolver} from "./app.js";
+import { authManager, router } from './app.js';
 import {LoginComponent} from "./LoginComponent";
-import {TEMPLATES} from "./BaseComponent";
 
 const initialState = {
     login: {
@@ -56,11 +55,12 @@ export class LoginController {
 
     _onSignUp(event) {
         event.preventDefault();
-        pageResolver.goTo(pageResolver.pageMapping.signUp.name);
+        router.changeRoute('/signUp');
+        // pageResolver.goTo(pageResolver.pageMapping.signUp.name);
     }
 
     connect() {
-        this.view = new LoginComponent(this.place, TEMPLATES.login, this.handlers);
+        this.view = new LoginComponent(this.place, this.handlers);
         this.view.render(this.state);
     }
 
@@ -84,7 +84,8 @@ export class LoginController {
 
     updateIsAuthErrorStatus(value) {
         if(value) {
-            pageResolver.goTo(pageResolver.pageMapping.usersTable.name);
+            // pageResolver.goTo(pageResolver.pageMapping.usersTable.name);
+            router.changeRoute('/users');
         } else {
             this.modifyState(state => state.validCredentials = !!value);
             this.view.updateValidCredentialsClass();

@@ -1,20 +1,21 @@
-import { BaseComponent } from './BaseComponent';
+import { BaseComponent, TEMPLATES } from './BaseComponent';
 import { pageResolver } from './app';
 
-
 export class EditUserComponent extends BaseComponent {
-  constructor ($tableInsertPlace, htmlTemplatesConfig, handlers) {
+  constructor ($tableInsertPlace, handlers) {
     super($tableInsertPlace, undefined, handlers);
-    this.htmlTemplateConfig = htmlTemplatesConfig;
+    this.countries = pageResolver.pageMapping.editUser.countryOptions;
+    this.htmlTemplate = TEMPLATES.editUser;
+    this.htmlTemplateCountryOptions = TEMPLATES.option;
 
   }
 
   render(state) {
-    let htmlToRender = this.htmlTemplateConfig.default;
+    let htmlToRender = this.htmlTemplate;
 
-    const countryOptionsHtml = pageResolver.pageMapping.editUser.countryOptions.map(country => {
+    const countryOptionsHtml = this.countries.map(country => {
       let optionSelected = (country === state.userCountry) ? 'selected' : '';
-        return this._fillTemplateWithData(this.htmlTemplateConfig.additional, { country, optionSelected });
+        return this._fillTemplateWithData(this.htmlTemplateCountryOptions, { country, optionSelected });
       }).join('');
 
     htmlToRender = htmlToRender.replaceAll(`{options}`, countryOptionsHtml);

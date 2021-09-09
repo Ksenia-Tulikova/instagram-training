@@ -1,6 +1,5 @@
-import { authManager, pageResolver, validator } from './app.js';
+import { authManager, router, validator } from './app.js';
 import { SignUpComponent } from './SignUpComponent';
-import { TEMPLATES } from './BaseComponent';
 
 const initialState = {
   login: {
@@ -72,7 +71,7 @@ export class SignUpController {
   }
 
   connect () {
-    this.view = new SignUpComponent(this.place, TEMPLATES.signUp, this.handlers);
+    this.view = new SignUpComponent(this.place, this.handlers);
     this.view.render(this.state);
   }
 
@@ -167,7 +166,9 @@ export class SignUpController {
 
       this.modifyState(state => state.isLogged = true);
 
-      pageResolver.goTo(pageResolver.pageMapping.usersTable.name);
+      router.changeRoute('/users');
+
+      // pageResolver.goTo(pageResolver.pageMapping.usersTable.name);
 
     } else {
       this.modifyState(state => {
