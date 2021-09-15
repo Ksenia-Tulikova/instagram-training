@@ -16,9 +16,7 @@ export default class UsersTableComponent extends BaseComponent {
 
     htmlToRender = htmlToRender.replaceAll(`{users}`, usersHtml);
 
-    this.place.innerHTML = htmlToRender;
-
-    super.updateEventListeners();
+    return htmlToRender;
 
   }
 

@@ -1,8 +1,10 @@
 import UsersTableComponent from './UsersTableComponent';
 import { authManager, pageResolver, router } from './app';
+import { BaseController } from './BaseController';
 
-export class UsersTableController {
+export class UsersTableController extends BaseController{
   constructor (place) {
+    super(undefined)
     this.place = place;
     this.state = {};
     this.handlers = {
@@ -26,10 +28,6 @@ export class UsersTableController {
 
   editProfile (userLogin) {
     router.changeRoute(`/user?login=${userLogin}`);
-    // router.changeRoute('/user',{userId});
-
-
-    // pageResolver.goTo(pageResolver.pageMapping.editUser.name, { userId });
   }
 
   deleteUserClicked (userId) {
@@ -51,7 +49,7 @@ export class UsersTableController {
     this.state.users = Object.values(authManager.getUsers());
 
     this.view = new UsersTableComponent(this.place, this.handlers);
-    this.view.render(this.state);
+    return this.view.render(this.state);
   }
 
   modifyState (stateModifier) {

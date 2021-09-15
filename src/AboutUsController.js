@@ -1,7 +1,9 @@
 import { AboutUsComponent } from './AboutUsComponent';
+import { BaseController } from './BaseController';
 
-export class AboutUsController{
+export class AboutUsController extends BaseController {
     constructor (place) {
+      super(undefined)
       this.place = place;
       this.state = {
         greeting: 'AboutUs',
@@ -10,6 +12,7 @@ export class AboutUsController{
 
   connect() {
       this.view = new AboutUsComponent(this.place);
-      this.view.render(this.state);
+      return this.view.render(this.state);
   }
+
 }

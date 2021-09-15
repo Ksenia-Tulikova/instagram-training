@@ -1,5 +1,6 @@
 import { authManager, router, validator } from './app.js';
 import { SignUpComponent } from './SignUpComponent';
+import { BaseController } from './BaseController';
 
 const initialState = {
   login: {
@@ -17,8 +18,9 @@ const initialState = {
   isLogged: false
 };
 
-export class SignUpController {
+export class SignUpController extends BaseController {
   constructor (place) {
+    super(undefined)
     this.place = place;
     this.state = initialState;
     this.handlers = {
@@ -72,7 +74,7 @@ export class SignUpController {
 
   connect () {
     this.view = new SignUpComponent(this.place, this.handlers);
-    this.view.render(this.state);
+    return this.view.render(this.state);
   }
 
   updateLogin (value) {

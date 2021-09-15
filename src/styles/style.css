@@ -49,10 +49,25 @@ body {
 
 .column-2 {
     background-color: lightgreen;
+    position: relative;
 }
 
 .column-3 {
     background-color: hotpink;
+}
+
+.main-container, .additional-container {
+    transition: opacity .8s ease-in-out .5s;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 10;
+    opacity: 0;
+}
+
+.main-container.active, .additional-container.active {
+    opacity: 1;
+    z-index: 15;
 }
 
 .login, .sign-up, .home, .edit-profile, .delete-profile, .users-table {
@@ -99,7 +114,67 @@ body {
     padding: 0 15px 0 0;
     color: #9596A2;
 }
+/*start*/
 
+.edit-profile .form h2 {
+    display: flex;
+    padding: 5px 40px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+}
+
+.edit-profile .form input[type="file"] {
+    display: none;
+}
+
+.edit-profile .form .custom-file-upload {
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    padding: 6px;
+    cursor: pointer;
+    background: linear-gradient(270deg, #3fa1a9, #79f1a4);
+
+}
+
+.edit-profile .form .img-wrap {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.edit-profile .form .img-upload:before {
+    content: "\f093";
+    font-size: 55px;
+    position: absolute;
+    padding-top: 40px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #63d3a6;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: #fff;
+}
+
+.edit-profile .form .img-upload:hover:before {
+    opacity: 1;
+}
+
+.edit-profile .form .img-upload img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+/*end*/
 .edit-profile .form .form-field select {
     height: 65%;
     width: 100%;
@@ -349,6 +424,8 @@ body {
 .home .finished img.finished-icon, .active .finished img.finished-icon {
     opacity: 1;
 }
+
+
 
 /*Разработка кастомного переключателя*/
 /*Стилизация переключателя (input с type="radio") выполняется аналогично, т.е. посредством тех же шагов которые мы применяли при кастомизации чекбокса.*/

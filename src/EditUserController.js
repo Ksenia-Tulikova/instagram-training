@@ -1,11 +1,19 @@
+import axios from 'axios';
 import { EditUserComponent } from './EditUserComponent';
 import { authManager, router } from './app';
+import { BaseController } from './BaseController';
 
-export class EditUserController {
+export class EditUserController extends BaseController {
   constructor (place) {
+    super(undefined);
     this.place = place;
     this.state = '';
     this.handlers = this.handlers = {
+      onPhotoLoad: {
+        queryParam: '#photo-upload',
+        eventType: 'change',
+        callback: this._onPhotoLoad.bind(this),
+      },
       onMaleClick: {
         queryParam: '.male_radio_btn input',
         eventType: 'click',
@@ -39,6 +47,21 @@ export class EditUserController {
     };
   }
 
+  loadPhoto (file) {
+    const reader = new FileReader();
+    this.uploadedFile = file;
+
+    reader.readAsDataURL(file);
+
+    reader.onload = () => {
+      this.updatePhotoRender(reader.result);
+    };
+  }
+
+  updatePhotoRender (src) {
+    this.view.renderNewPhoto(src);
+  }
+
   updateMale (userMale) {
     this.modifyState(state => state.male[userMale] = 'checked');
   }
@@ -55,23 +78,38 @@ export class EditUserController {
     this.modifyState(state => state.userCountry = userCountry);
   }
 
-  save () {
+  async save () {
+    const savedFileId = await this.uploadPhotoOnServer(this.uploadedFile);
+    this.modifyState(state => state.avatarId = savedFileId);
     authManager.updateUser(this.state);
     router.changeRoute('/users');
-    // pageResolver.goTo(pageResolver.pageMapping.usersTable.name);
   }
 
   close () {
     router.changeRoute('/users');
+  }
 
-    // pageResolver.goTo(pageResolver.pageMapping.usersTable.name);
+  async uploadPhotoOnServer (file) {
+    const formData = new FormData();
+    formData.append('avatar', file);
+    formData.append('login', this.state.login);
+
+    const response  = await axios({
+      method: 'POST',
+      url: 'http://localhost:8080/upload',
+      data: formData,
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+
+    return response.data;
   }
 
   connect (params) {
-    console.log(params);
     this.state = authManager.getUser(params.login);
+    this.state.avatarSrc = `http://localhost:8080/avatars/${this.state.avatarId || 'default_avatar.jpg'}`;
+
     this.view = new EditUserComponent(this.place, this.handlers);
-    this.view.render(this.state);
+    return this.view.render(this.state);
   }
 
   modifyState (stateModifier) {
@@ -80,6 +118,10 @@ export class EditUserController {
       stateModifier(newState);
     }
     this.state = newState;
+  }
+
+  _onPhotoLoad (event) {
+    this.loadPhoto(event.target.files[0]);
   }
 
   _onMaleClick (event) {

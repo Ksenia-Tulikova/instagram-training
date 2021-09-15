@@ -114,7 +114,17 @@ export const TEMPLATES = {
             <div class="form">
                 <h2>
                     <span class="edit-profile-invitation ">Edit {login} Profile</span>
+                    <div class="photo">
+                  <label for="photo-upload" class="custom-file-upload fas">
+                      <div class="img-wrap img-upload">
+<!--                          <img for="photo-upload" src="https://github.com/OlgaKoplik/CodePen/blob/master/profile.jpg?raw=true">-->
+                          <img for="photo-upload" src="{avatarSrc}">
+                      </div>
+                      <input id="photo-upload" type="file">
+                  </label>
+                </div>
                 </h2>
+                
                 <div class="form-field user-male">
                     <div class="male_radio_btn">
                         <input id="man" type="radio" name="male" value="man" {male.man}>
@@ -209,7 +219,8 @@ export class BaseComponent {
       });
     }
 
-    this.place.innerHTML = htmlToRender;
-    this.updateEventListeners();
+    return htmlToRender;
+    // this.place.innerHTML = htmlToRender;
+    // this.updateEventListeners();
   }
 }

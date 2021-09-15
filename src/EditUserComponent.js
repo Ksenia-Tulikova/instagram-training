@@ -20,8 +20,7 @@ export class EditUserComponent extends BaseComponent {
 
     htmlToRender = htmlToRender.replaceAll(`{options}`, countryOptionsHtml);
 
-    this.place.innerHTML = this._fillTemplateWithData(htmlToRender, state);
-    super.updateEventListeners();
+    return this._fillTemplateWithData(htmlToRender, state);
   }
 
   _fillTemplateWithData (template, data) {
@@ -34,4 +33,9 @@ export class EditUserComponent extends BaseComponent {
 
     return html;
   }
+
+  renderNewPhoto(src) {
+    this.place.querySelector('.active img[for="photo-upload"]').src = src;
+  }
+
 }

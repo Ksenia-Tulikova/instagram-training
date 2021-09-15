@@ -1,5 +1,6 @@
 import { authManager, router } from './app.js';
 import {LoginComponent} from "./LoginComponent";
+import { BaseController } from './BaseController';
 
 const initialState = {
     login: {
@@ -11,9 +12,10 @@ const initialState = {
     validCredentials: null
 };
 
-export class LoginController {
+export class LoginController extends BaseController {
 
     constructor(place) {
+        super(undefined);
         this.place = place;
         this.state = initialState;
         this.handlers = {
@@ -61,7 +63,7 @@ export class LoginController {
 
     connect() {
         this.view = new LoginComponent(this.place, this.handlers);
-        this.view.render(this.state);
+        return this.view.render(this.state);
     }
 
     updateLogin(value) {

@@ -16,6 +16,9 @@ import { ServiceHistory } from './ServiceHistory';
 
 
 const $main = document.querySelector('main');
+const $additionalContainer = document.querySelector('.additional-container');
+const $mainContainer = document.querySelector('.main-container');
+
 export const authManager = new AuthManager();
 export const validator = new Validation(VALIDATION_RULES);
 
@@ -47,7 +50,7 @@ const pageConfiguration = {
     },
 };
 
-export const pageResolver = new PageResolver(pageConfiguration);
+export const pageResolver = new PageResolver(pageConfiguration, $additionalContainer, $mainContainer);
 export const serviceLocation = new ServiceLocation();
 export const serviceHistory = new ServiceHistory();
 
