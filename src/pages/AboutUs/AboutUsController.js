@@ -1,5 +1,5 @@
 import { AboutUsComponent } from './AboutUsComponent';
-import { BaseController } from './BaseController';
+import { BaseController } from '../BaseController';
 
 export class AboutUsController extends BaseController {
     constructor (place) {

@@ -95,7 +95,7 @@ export const TEMPLATES = {
                     <div class="user-login">
                         <span>{login}</span>
                     </div>
-                    <div class="edit-user-actions"  data-user-id="{login}">
+                    <div class="edit-user-actions"  data-user-id="{id}">
                         <button type="button" class="button button-edit-user">
                             <div class="arrow-wrapper">
                                 <span class="arrow"></span>
@@ -117,23 +117,23 @@ export const TEMPLATES = {
                     <div class="photo">
                   <label for="photo-upload" class="custom-file-upload fas">
                       <div class="img-wrap img-upload">
-<!--                          <img for="photo-upload" src="https://github.com/OlgaKoplik/CodePen/blob/master/profile.jpg?raw=true">-->
-                          <img for="photo-upload" src="{avatarSrc}">
+                          <img for="photo-upload" class="avatar" src="{avatarSrc}">
                       </div>
                       <input id="photo-upload" type="file">
                   </label>
+                  <i class="far fa-times-circle" id="delete-photo"></i>
                 </div>
                 </h2>
                 
                 <div class="form-field user-male">
                     <div class="male_radio_btn">
-                        <input id="man" type="radio" name="male" value="man" {male.man}>
-                        <label for="man">Man</label>
+                        <input id="man" type="radio" name="gender" value="male" {gender.male}>
+                        <label for="man">Male</label>
                       </div>
                        
                       <div class="male_radio_btn">
-                        <input id="woman" type="radio" name="male" value="woman" {male.woman}>
-                        <label for="woman">Woman</label>
+                        <input id="woman" type="radio" name="gender" value="female" {gender.female}>
+                        <label for="woman">Female</label>
                     </div>
                 </div>
                     

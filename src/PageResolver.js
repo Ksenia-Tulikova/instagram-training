@@ -7,9 +7,9 @@ export class PageResolver {
     this.inactive = this.additionalContainer;
   }
 
-  goTo (pageName, params) {
+  async goTo (pageName, params) {
     const controller = this.pageMapping[pageName].controller;
-    const htmlToRender = controller.connect(params);
+    const htmlToRender = await controller.connect(params);
 
     this.placeToContainer(htmlToRender);
     controller.updateListeners();

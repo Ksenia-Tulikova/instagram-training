@@ -1,5 +1,5 @@
-import { BaseComponent, TEMPLATES } from './BaseComponent';
-import { pageResolver } from './app';
+import { BaseComponent, TEMPLATES } from '../BaseComponent';
+import { pageResolver } from '../../app';
 
 export class EditUserComponent extends BaseComponent {
   constructor ($tableInsertPlace, handlers) {
@@ -34,8 +34,8 @@ export class EditUserComponent extends BaseComponent {
     return html;
   }
 
-  renderNewPhoto(src) {
-    this.place.querySelector('.active img[for="photo-upload"]').src = src;
+  renderAvatar(src) {
+    this.place.querySelector('.avatar').src = src;
   }
 
 }

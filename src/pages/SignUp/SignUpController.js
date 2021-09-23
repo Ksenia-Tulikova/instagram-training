@@ -1,6 +1,8 @@
-import { authManager, router, validator } from './app.js';
+import { router } from '../../app.js';
 import { SignUpComponent } from './SignUpComponent';
-import { BaseController } from './BaseController';
+import { BaseController } from '../BaseController';
+import { validator } from './validator';
+import { createUser } from '../../api';
 
 const initialState = {
   login: {
@@ -153,10 +155,7 @@ export class SignUpController extends BaseController {
     };
     const additionalAuthData = {
       dateOfBirth: '',
-      male: {
-        woman: '',
-        man: ''
-      },
+      gender: '',
       tel: '',
       userCountry: ''
     };
@@ -164,8 +163,8 @@ export class SignUpController extends BaseController {
     const validationResult = validator.validateGlobal(authData);
 
     if (validationResult.isValid) {
-      authManager.setNewUser({...authData, ...additionalAuthData});
-
+      // authManager.setNewUser({...authData, ...additionalAuthData});
+      createUser({...authData, ...additionalAuthData});
       this.modifyState(state => state.isLogged = true);
 
       router.changeRoute('/users');

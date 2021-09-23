@@ -1,6 +1,7 @@
-import { authManager, router } from './app.js';
+import { router } from '../../app.js';
 import {LoginComponent} from "./LoginComponent";
-import { BaseController } from './BaseController';
+import { BaseController } from '../BaseController';
+import { authenticate } from '../../api';
 
 const initialState = {
     login: {
@@ -74,11 +75,15 @@ export class LoginController extends BaseController {
         this.modifyState(state => state.password.value = value);
     }
 
-    submit() {
-        const isAuth = authManager.isAuth({
-            'login': this.state.login.value,
-            'password': this.state.password.value
-        });
+    async submit() {
+        // const isAuth = authManager.isAuth({
+        //     'login': this.state.login.value,
+        //     'password': this.state.password.value
+        // });
+        const isAuth = await authenticate({
+                'login': this.state.login.value,
+                'password': this.state.password.value
+            });
 
         this.state = initialState;
         this.updateIsAuthErrorStatus(isAuth);

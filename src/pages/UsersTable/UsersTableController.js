@@ -1,6 +1,7 @@
 import UsersTableComponent from './UsersTableComponent';
-import { authManager, pageResolver, router } from './app';
-import { BaseController } from './BaseController';
+import { pageResolver, router } from '../../app';
+import { BaseController } from '../BaseController';
+import { getUsers, removeUser } from '../../api';
 
 export class UsersTableController extends BaseController{
   constructor (place) {
@@ -26,8 +27,8 @@ export class UsersTableController extends BaseController{
     };
   }
 
-  editProfile (userLogin) {
-    router.changeRoute(`/user?login=${userLogin}`);
+  editProfile (userId) {
+    router.changeRoute(`/user?id=${userId}`);
   }
 
   deleteUserClicked (userId) {
@@ -35,8 +36,9 @@ export class UsersTableController extends BaseController{
     this.view.togglePopUp();
   }
 
-  deleteUser () {
-    authManager.deleteUser(this.state.activeUserId);
+  async deleteUser () {
+    // authManager.deleteUser(this.state.activeUserId);
+    await removeUser(this.state.activeUserId);
     pageResolver.goTo(pageResolver.pageMapping.usersTable.name);
   }
 
@@ -45,8 +47,9 @@ export class UsersTableController extends BaseController{
     this.view.togglePopUp();
   }
 
-  connect () {
-    this.state.users = Object.values(authManager.getUsers());
+  async connect () {
+    // this.state.users = Object.values(authManager.getUsers());
+    this.state.users = await getUsers();
 
     this.view = new UsersTableComponent(this.place, this.handlers);
     return this.view.render(this.state);
@@ -62,6 +65,7 @@ export class UsersTableController extends BaseController{
 
   _onEditUserClick (event) {
     this.editProfile(event.target.closest('.edit-user-actions').dataset.userId);
+
   }
 
   _onDeleteUserClick (event) {

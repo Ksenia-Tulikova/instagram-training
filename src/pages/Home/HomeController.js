@@ -1,6 +1,6 @@
-import {TEMPLATES} from "./BaseComponent";
+import {TEMPLATES} from "../BaseComponent";
 import {HomeComponent} from "./HomeComponent";
-import { BaseController } from './BaseController';
+import { BaseController } from '../BaseController';
 
 export class HomeController extends BaseController {
     constructor(place) {

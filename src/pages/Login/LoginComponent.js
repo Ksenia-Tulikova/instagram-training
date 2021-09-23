@@ -1,4 +1,4 @@
-import { BaseComponent, TEMPLATES } from './BaseComponent';
+import { BaseComponent, TEMPLATES } from '../BaseComponent';
 
 export class LoginComponent extends BaseComponent{
     constructor($formInsertPlace, handlers) {

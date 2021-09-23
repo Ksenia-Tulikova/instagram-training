@@ -1,4 +1,4 @@
-import { BaseComponent, TEMPLATES } from './BaseComponent';
+import { BaseComponent, TEMPLATES } from '../BaseComponent';
 
 export default class UsersTableComponent extends BaseComponent {
   constructor ($tableInsertPlace, handlers) {

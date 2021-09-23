@@ -1,7 +1,7 @@
-import axios from 'axios';
 import { EditUserComponent } from './EditUserComponent';
-import { authManager, router } from './app';
-import { BaseController } from './BaseController';
+import { router } from '../../app';
+import { BaseController } from '../BaseController';
+import { getUser, updateUser, uploadAvatar } from '../../api';
 
 export class EditUserController extends BaseController {
   constructor (place) {
@@ -13,6 +13,11 @@ export class EditUserController extends BaseController {
         queryParam: '#photo-upload',
         eventType: 'change',
         callback: this._onPhotoLoad.bind(this),
+      },
+      onDeletePhoto: {
+        queryParam: '#delete-photo',
+        eventType: 'click',
+        callback: this._onDeletePhoto.bind(this),
       },
       onMaleClick: {
         queryParam: '.male_radio_btn input',
@@ -54,16 +59,22 @@ export class EditUserController extends BaseController {
     reader.readAsDataURL(file);
 
     reader.onload = () => {
+      console.log(reader.result);
       this.updatePhotoRender(reader.result);
     };
   }
 
   updatePhotoRender (src) {
-    this.view.renderNewPhoto(src);
+    this.view.renderAvatar(src);
   }
 
-  updateMale (userMale) {
-    this.modifyState(state => state.male[userMale] = 'checked');
+  updateGender (userGender) {
+    this.modifyState(state => {
+      state.gender = {
+        male: userGender === 'male' ? 'checked' : '',
+        female: userGender === 'female' ? 'checked' : '',
+      };
+    });
   }
 
   updateDateOfBirth (dateOfBirth) {
@@ -79,9 +90,13 @@ export class EditUserController extends BaseController {
   }
 
   async save () {
-    const savedFileId = await this.uploadPhotoOnServer(this.uploadedFile);
-    this.modifyState(state => state.avatarId = savedFileId);
-    authManager.updateUser(this.state);
+    if (this.uploadedFile) {
+      const savedFileId = await this.uploadPhotoOnServer(this.uploadedFile);
+      this.modifyState(state => {state.avatarId = savedFileId;});
+    }
+
+    // authManager.updateUser(this.state);
+    updateUser(this.state);
     router.changeRoute('/users');
   }
 
@@ -89,27 +104,36 @@ export class EditUserController extends BaseController {
     router.changeRoute('/users');
   }
 
-  async uploadPhotoOnServer (file) {
-    const formData = new FormData();
-    formData.append('avatar', file);
-    formData.append('login', this.state.login);
-
-    const response  = await axios({
-      method: 'POST',
-      url: 'http://localhost:8080/upload',
-      data: formData,
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
-
-    return response.data;
+  deletePhoto () {
+    this.uploadedFile = undefined;
+    this.modifyState(state => {state.avatarId = undefined});
+    this.view.renderAvatar(this._getAvatarSrc());
   }
 
-  connect (params) {
-    this.state = authManager.getUser(params.login);
-    this.state.avatarSrc = `http://localhost:8080/avatars/${this.state.avatarId || 'default_avatar.jpg'}`;
+  async uploadPhotoOnServer (avatar) {
+    return await uploadAvatar({
+      avatar,
+      login: this.state.login,
+    });
+  }
 
+  async connect (params) {
+    // this.state = authManager.getUser(params.login);
+    const user = await getUser(params.id);
+    this.state = {
+      ...user,
+      gender: {
+        male: user.gender === 'male' ? 'checked' : '',
+        female: user.gender === 'female' ? 'checked' : '',
+      }
+    };
+
+    const stateToRender = {
+      ...this.state,
+      avatarSrc: this._getAvatarSrc(),
+    };
     this.view = new EditUserComponent(this.place, this.handlers);
-    return this.view.render(this.state);
+    return this.view.render(stateToRender);
   }
 
   modifyState (stateModifier) {
@@ -120,14 +144,23 @@ export class EditUserController extends BaseController {
     this.state = newState;
   }
 
+  _getAvatarSrc () {
+    const avatar = this.state.avatarId && this.state.avatarId !== 'undefined' ? this.state.avatarId : 'default_avatar.jpg';
+    return `http://localhost:8080/avatars/${avatar}`;
+  }
+
   _onPhotoLoad (event) {
     this.loadPhoto(event.target.files[0]);
+  }
+
+  _onDeletePhoto () {
+    this.deletePhoto();
   }
 
   _onMaleClick (event) {
     if (event.target.checked) {
       console.log(`Male is: ${event.target.value}`);
-      this.updateMale(event.target.value);
+      this.updateGender(event.target.value);
     }
   }
 

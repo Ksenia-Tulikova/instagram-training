@@ -1,16 +1,15 @@
 import './styles/style.css';
 
-import {VALIDATION_RULES, Validation} from "./Validation.js";
 import {AuthManager} from "./AuthManager.js";
 import {PageResolver} from "./PageResolver.js";
 
-import {LoginController} from "./LoginController.js";
-import {SignUpController} from "./SignUpController.js";
-import {HomeController} from "./HomeController.js";
-import { UsersTableController } from './UsersTableController';
-import { EditUserController } from './EditUserController';
+import {LoginController} from "./pages/Login/LoginController.js";
+import {SignUpController} from "./pages/SignUp/SignUpController.js";
+import {HomeController} from "./pages/Home/HomeController.js";
+import { UsersTableController } from './pages/UsersTable/UsersTableController';
+import { EditUserController } from './pages/EditUser/EditUserController';
 import { Router } from './Router';
-import { AboutUsController } from './AboutUsController';
+import { AboutUsController } from './pages/AboutUs/AboutUsController';
 import { ServiceLocation } from './ServiceLocation';
 import { ServiceHistory } from './ServiceHistory';
 
@@ -20,7 +19,6 @@ const $additionalContainer = document.querySelector('.additional-container');
 const $mainContainer = document.querySelector('.main-container');
 
 export const authManager = new AuthManager();
-export const validator = new Validation(VALIDATION_RULES);
 
 const pageConfiguration = {
     login: {
