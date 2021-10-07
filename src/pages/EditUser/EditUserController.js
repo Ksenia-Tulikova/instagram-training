@@ -1,7 +1,7 @@
 import { EditUserComponent } from './EditUserComponent';
 import { router } from '../../app';
 import { BaseController } from '../BaseController';
-import { getUser, updateUser, uploadAvatar } from '../../api';
+import { addImage, deleteImage, getUser, getUserPhotos, updateUser, uploadAvatar } from '../../api';
 
 export class EditUserController extends BaseController {
   constructor (place) {
@@ -9,15 +9,25 @@ export class EditUserController extends BaseController {
     this.place = place;
     this.state = '';
     this.handlers = this.handlers = {
-      onPhotoLoad: {
+      onAvatarLoad: {
         queryParam: '#photo-upload',
+        eventType: 'change',
+        callback: this._onAvatarLoad.bind(this),
+      },
+      onPhotoLoad: {
+        queryParam: '#user-photos-upload',
         eventType: 'change',
         callback: this._onPhotoLoad.bind(this),
       },
-      onDeletePhoto: {
-        queryParam: '#delete-photo',
+      onDeleteAvatar: {
+        queryParam: '#delete-avatar',
         eventType: 'click',
-        callback: this._onDeletePhoto.bind(this),
+        callback: this._onDeleteAvatar.bind(this),
+      },
+      onDeleteUserPhoto: {
+        queryParam: '.delete-user-photo',
+        eventType: 'click',
+        callback: this._onDeleteUserPhoto.bind(this),
       },
       onMaleClick: {
         queryParam: '.male_radio_btn input',
@@ -52,20 +62,31 @@ export class EditUserController extends BaseController {
     };
   }
 
-  loadPhoto (file) {
+  loadAvatar (file) {
     const reader = new FileReader();
-    this.uploadedFile = file;
+    this.uploadedAvatarFile = file;
 
     reader.readAsDataURL(file);
 
     reader.onload = () => {
-      console.log(reader.result);
-      this.updatePhotoRender(reader.result);
+      this.updateAvatarRender(reader.result);
     };
   }
 
-  updatePhotoRender (src) {
-    this.view.renderAvatar(src);
+  updateAvatarRender (src) {
+    // this.view.renderAvatar(src);
+    this.view.renderImage({ queryParam: '.avatar', src });
+
+  }
+
+  async loadUserPhoto (file) {
+    const userImageInfo = { userId: this.state.id, image: file };
+    const userImage = await addImage(userImageInfo);
+    const urlEncodedName = encodeURI(userImage.name);
+    const date = new Date(userImage.date).toISOString().slice(0, 10);
+    const src = `http://localhost:8080/userImages/${this.state.id}/${urlEncodedName}`;
+
+    this.view.renderImageCard({ ...userImage, src, date });
   }
 
   updateGender (userGender) {
@@ -90,8 +111,8 @@ export class EditUserController extends BaseController {
   }
 
   async save () {
-    if (this.uploadedFile) {
-      const savedFileId = await this.uploadPhotoOnServer(this.uploadedFile);
+    if (this.uploadedAvatarFile) {
+      const savedFileId = await this.uploadAvatarOnServer(this.uploadedAvatarFile);
       this.modifyState(state => {state.avatarId = savedFileId;});
     }
 
@@ -104,24 +125,37 @@ export class EditUserController extends BaseController {
     router.changeRoute('/users');
   }
 
-  deletePhoto () {
+  deleteAvatar () {
     this.uploadedFile = undefined;
-    this.modifyState(state => {state.avatarId = undefined});
-    this.view.renderAvatar(this._getAvatarSrc());
+    this.modifyState(state => {state.avatarId = undefined;});
+    const photoParams = {
+      queryParam: '.avatar',
+      src: this._getAvatarSrc()
+    };
+    this.view.renderImage(photoParams);
   }
 
-  async uploadPhotoOnServer (avatar) {
+  async uploadAvatarOnServer (avatar) {
     return await uploadAvatar({
       avatar,
       login: this.state.login,
     });
   }
 
+  deleteUserPhoto (image) {
+    deleteImage({ userId: this.state.id, name: image.dataset.name });
+    this.view.deleteImageCard(image);
+    //remove photo from db
+    //remove from express
+  }
+
   async connect (params) {
-    // this.state = authManager.getUser(params.login);
     const user = await getUser(params.id);
+    const userPhotosInfo = await getUserPhotos(params.id);
+    const photos = this._handlePhotos(userPhotosInfo, params.id);
     this.state = {
       ...user,
+      photos,
       gender: {
         male: user.gender === 'male' ? 'checked' : '',
         female: user.gender === 'female' ? 'checked' : '',
@@ -132,6 +166,7 @@ export class EditUserController extends BaseController {
       ...this.state,
       avatarSrc: this._getAvatarSrc(),
     };
+
     this.view = new EditUserComponent(this.place, this.handlers);
     return this.view.render(stateToRender);
   }
@@ -144,22 +179,48 @@ export class EditUserController extends BaseController {
     this.state = newState;
   }
 
+  _handlePhotos (photosData, userId) {
+    if (!photosData) {
+      return null;
+    }
+
+    return photosData.map((photoData) => {
+      return {
+        date: new Date(photoData.date).toISOString().slice(0, 10),
+        name: photoData.name,
+        src: `http://localhost:8080/userImages/${userId}/${photoData.name}`
+      };
+    });
+  }
+
   _getAvatarSrc () {
     const avatar = this.state.avatarId && this.state.avatarId !== 'undefined' ? this.state.avatarId : 'default_avatar.jpg';
     return `http://localhost:8080/avatars/${avatar}`;
   }
 
-  _onPhotoLoad (event) {
-    this.loadPhoto(event.target.files[0]);
+  _onAvatarLoad (event) {
+    this.loadAvatar(event.target.files[0]);
   }
 
-  _onDeletePhoto () {
-    this.deletePhoto();
+  _onPhotoLoad (event) {
+    if (!event.target.value) {
+      return;
+    }
+    event.stopPropagation();
+    this.loadUserPhoto(event.target.files[0]);
+    event.target.value = null
+  }
+
+  _onDeleteAvatar () {
+    this.deleteAvatar();
+  }
+
+  _onDeleteUserPhoto (event) {
+    this.deleteUserPhoto(event.target);
   }
 
   _onMaleClick (event) {
     if (event.target.checked) {
-      console.log(`Male is: ${event.target.value}`);
       this.updateGender(event.target.value);
     }
   }

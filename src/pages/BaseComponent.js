@@ -121,7 +121,7 @@ export const TEMPLATES = {
                       </div>
                       <input id="photo-upload" type="file">
                   </label>
-                  <i class="far fa-times-circle" id="delete-photo"></i>
+                  <i class="far fa-times-circle" id="delete-avatar"></i>
                 </div>
                 </h2>
                 
@@ -155,6 +155,15 @@ export const TEMPLATES = {
                     </select>
                 </div>
                 <div class="edit-profile-actions">
+                    <button type="button" class="button button-add-photo">
+                        <input id="user-photos-upload" type="file"/> 
+                        <div class="arrow-wrapper">
+                            <span class="arrow"></span>
+                        </div>
+                        <label for="user-photos-upload">
+                            <p class="button-text">ADD YOUR PHOTOS</p>
+                        </label>
+                    </button>
                     <button type="button" class="button button-save">
                         <div class="arrow-wrapper">
                             <span class="arrow"></span>
@@ -169,7 +178,28 @@ export const TEMPLATES = {
                     </button>
                 </div>
             </div>
+            <div class="user-photos">
+                   {photos}  
+            </div>
         </div>`,
+  userPhoto: `
+              <div class="photo-container">
+                  <div class="content">
+                      <div class="content-overlay">
+                         <i class="far fa-times-circle delete-user-photo"
+                            data-name={name}
+                         ></i>
+                      </div>
+                      <img id={name}
+                           class="content-image"
+                           src={src}>
+                      <div class="content-details fadeIn-top">
+                        <h3>This is a title</h3>
+                        <p>{date}</p>
+                      </div>
+                  </div>
+              </div>
+  `,
   option: `<option value="{country}" {optionSelected}>{country}</option>`,
   aboutUs: `<h2>
             <span>{greeting}</span>

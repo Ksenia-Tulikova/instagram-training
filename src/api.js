@@ -33,10 +33,10 @@ export const getUsers = async () => {
   return response.data;
 };
 
-export const getUser = async (login) => {
+export const getUser = async (id) => {
   const response = await axios({
     method: 'GET',
-    url: `http://localhost:8080/user/${login}`,
+    url: `http://localhost:8080/user/${id}`,
   });
   return response.data;
 };
@@ -57,7 +57,7 @@ export const createUser = async (userData) => {
   const formData = fillFormDataWithData(userData);
   const response = await axios({
     method: 'POST',
-    url: 'http://localhost:8080/addUser',
+    url: 'http://localhost:8080/users',
     data: formData,
     headers: { 'Content-Type': 'multipart/form-data' },
   });
@@ -72,10 +72,9 @@ export const updateUser = async (userData) => {
   };
 
   const formData = fillFormDataWithData(requestParams);
-  console.log(formData);
   const response = await axios({
     method: 'PUT',
-    url: 'http://localhost:8080/updateUser',
+    url: `http://localhost:8080/users/${userData.id}`,
     data: formData,
     headers: { 'Content-Type': 'multipart/form-data' },
   });
@@ -83,14 +82,48 @@ export const updateUser = async (userData) => {
   return response.data;
 };
 
-export const removeUser = async (login) => {
-  const formData = fillFormDataWithData({login});
+export const removeUser = async (id) => {
+  const formData = fillFormDataWithData({id});
   const response = await axios({
     method: 'DELETE',
-    url: 'http://localhost:8080/removeUser',
+    url: `http://localhost:8080/users/${id}`,
     data: formData,
     headers: { 'Content-Type': 'multipart/form-data' },
   });
 
   return response.data;
 };
+
+export const addImage = async (userImageInfo) => {
+  const formData = fillFormDataWithData(userImageInfo);
+  const response = await axios({
+    method: 'POST',
+    url: 'http://localhost:8080/images',
+    data: formData,
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
+  return response.data;
+};
+
+export const deleteImage = async ({userId, name}) => {
+  const formData = fillFormDataWithData({userId, name});
+  const response = await axios({
+    method:'DELETE',
+    data: formData,
+    url:`http://localhost:8080/images/${userId}`,
+    headers:{'Content-Type': 'multipart/form-data'},
+  });
+
+  return response.data;
+}
+
+export const getUserPhotos = async (userId) => {
+  const response = await axios({
+    method:'GET',
+    url:`http://localhost:8080/images/${userId}`,
+    headers:{'Content-Type': 'multipart/form-data'},
+  });
+
+  return response.data;
+}
