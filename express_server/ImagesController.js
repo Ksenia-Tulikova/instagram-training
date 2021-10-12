@@ -1,0 +1,127 @@
+const UserImages = require('./models/userImages');
+const fs = require('fs');
+const User = require('./models/User');
+
+class UserImagesController {
+  constructor () {
+    this.add = this.add.bind(this);
+    this.delete = this.delete.bind(this);
+
+    this._addImage = this._addImage.bind(this);
+    this._moveImageIntoFolder = this._moveImageIntoFolder.bind(this);
+    this._deleteImage = this._deleteImage.bind(this);
+  }
+
+  async add (req, res) {
+    if (!req.files || Object.keys(req.files).length === 0) {
+      return res.status(400).send('No file were uploaded.');
+    }
+    const userId = req.body.userId;
+    const image = {
+      name: req.files.image.name,
+      file: req.files.image,
+    };
+
+    this._moveImageIntoFolder(image);
+
+    await this._addImage(userId, image.name, res);
+  }
+
+  get (req, res) {
+    console.log(req.params);
+
+    UserImages.get((req.params.userId), (err, images) => {
+      if (err) {
+        return res.status(400).send('Something got wrong');
+      }
+      images ? res.json(images) : res.end('');
+    });
+  }
+
+  async delete (req, res) {
+    const userId = req.body.userId;
+    const name = req.body.name;
+
+    await this._deleteImage(userId, name);
+    this._deleteImageFromFolder(name);
+
+    res.status(200).send('Image was deleted.');
+  }
+
+  async getAll (req, res) {
+    const images = await UserImages.getAll();
+
+    const users = await User.findAll();
+
+    const result = images.map(img => {
+      const user = users.find((user => user.id === img.userId));
+      const image = {
+        userId: img.userId,
+        date: img.date,
+        login: user.login,
+        avatar: user.avatarId,
+        image: img.name
+      };
+      return image;
+    });
+
+    res.json(result);
+  }
+
+  uploadAvatarOnServer (req, res) {
+    if (!req.files || Object.keys(req.files).length === 0) {
+      return res.status(400).send('No files were uploaded.');
+    }
+
+    const serverAvatarName = `${req.body.login}_${req.files.avatar.name}`;
+    req.files.avatar.mv(`public/avatars/${serverAvatarName}`);
+    res.end(serverAvatarName);
+  }
+
+  _moveImageIntoFolder (image) {
+    const dirPath = `public/userImages/`;
+    if (!fs.existsSync(dirPath)) {    //check if folder already exists
+      fs.mkdirSync(dirPath, err => {     //creating folder
+        if (err) throw err; // не удалось создать папку
+        console.log('Папка успешно создана');
+      });
+    }
+    image.file.mv(`${dirPath}/${image.name}`);//move file
+  }
+
+  async _addImage (userId, name, res) {
+    try {
+      const imageInfo = {
+        userId,
+        name,
+        date: Date.now(),
+      };
+
+      await UserImages.create(imageInfo);
+
+      res.status(201).send(imageInfo);
+    } catch (error) {
+      res.status(500);
+    }
+  }
+
+  _deleteImageFromFolder (name) {
+    const imagePath = `public/userImages/${name}`;
+
+    fs.unlink(imagePath, err => {    // delete image
+      if (err) throw err; // не удалось удалить
+      console.log('Image was deleted');
+    });
+
+  }
+
+  async _deleteImage (userId, name) {
+    const imageInfo = {
+      userId,
+      name,
+    };
+    await UserImages.remove(imageInfo);
+  }
+}
+
+module.exports = new UserImagesController();

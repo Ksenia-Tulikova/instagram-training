@@ -1,0 +1,21 @@
+{
+  "name": "express_server",
+  "version": "1.0.0",
+  "description": "server",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "mongodb": "^4.1.2",
+    "mongoose": "^6.0.7"
+  },
+  "devDependencies": {
+    "uuid": "^8.3.2"
+  }
+}
