@@ -98,7 +98,7 @@ export const addImage = async (userImageInfo) => {
   const formData = fillFormDataWithData(userImageInfo);
   const response = await axios({
     method: 'POST',
-    url: 'http://localhost:8080/images',
+    url: 'http://localhost:8080/users/images',
     data: formData,
     headers: { 'Content-Type': 'multipart/form-data' },
   });
@@ -111,17 +111,27 @@ export const deleteImage = async ({userId, name}) => {
   const response = await axios({
     method:'DELETE',
     data: formData,
-    url:`http://localhost:8080/images/${userId}`,
+    url:`http://localhost:8080/users/${userId}/images`,
     headers:{'Content-Type': 'multipart/form-data'},
   });
 
   return response.data;
 }
 
-export const getUserPhotos = async (userId) => {
+export const getUserImages = async (userId) => {
   const response = await axios({
     method:'GET',
-    url:`http://localhost:8080/images/${userId}`,
+    url:`http://localhost:8080/users/${userId}/images`,
+    headers:{'Content-Type': 'multipart/form-data'},
+  });
+
+  return response.data;
+}
+
+export const getImages = async () => {
+  const response = await axios({
+    method:'GET',
+    url:`http://localhost:8080/images`,
     headers:{'Content-Type': 'multipart/form-data'},
   });
 

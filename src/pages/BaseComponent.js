@@ -64,9 +64,18 @@ export const TEMPLATES = {
         </div>`,
   usersTable: `<div class="users-table ">
     <div class="users-table-form">
-        <h2>
-            <span>Users</span>
-        </h2>
+        <div class="users-table-header">
+            <h2>
+                <span>Users</span>
+            </h2>
+            <button type="text" id="view-images" class="button button-view-images">
+                <div class="arrow-wrapper">
+                    <span class="arrow"></span>
+                </div>
+                <p class="button-text">View all photos</p>
+            </button>
+        </div>
+        
         {users}
     </div>
 </div>
@@ -203,7 +212,36 @@ export const TEMPLATES = {
   option: `<option value="{country}" {optionSelected}>{country}</option>`,
   aboutUs: `<h2>
             <span>{greeting}</span>
-        </h2>`
+        </h2>`,
+  albumImagesContainer: `<div class="images-container">
+                            <h2>
+                                Images
+                            </h2>
+                            <div class="images">
+                              {images}
+                            </div>
+                         </div>`,
+  albumImage: `<div class="photo-container {userId}">
+                  <div class="content">
+                      <div class="content-overlay"></div>
+                      <img
+                           class="content-image"
+                           src={image}>
+                      <div class="content-details fadeIn-top">
+                        
+                        <div class="details">
+                          <h3>{login}</h3>
+                          <div class="details-avatar-container">
+                            <img
+                             class="details-avatar-image"
+                             src={avatar}>
+                          </div>
+                        </div>  
+                        <p class ="details-date">{date}</p>              
+                      </div>
+                  </div>
+              </div>`,
+
 };
 
 export class BaseComponent {

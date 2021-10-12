@@ -59,8 +59,6 @@ export class EditUserComponent extends BaseComponent {
   renderImageCard(imageInfo){
     const userPhotosHtml = this._fillUserPhotos([imageInfo]);
     this.place.querySelector('.user-photos').insertAdjacentHTML('afterbegin',userPhotosHtml);
-    super.updateEventListeners();
-    // this.place.querySelector(`#${imgName}`).closest('.photo-container').remove();
   }
 
   deleteImageCard(image) {

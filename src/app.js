@@ -12,6 +12,7 @@ import { Router } from './Router';
 import { AboutUsController } from './pages/AboutUs/AboutUsController';
 import { ServiceLocation } from './ServiceLocation';
 import { ServiceHistory } from './ServiceHistory';
+import { ImagesController } from './pages/Images/ImagesController';
 
 
 const $main = document.querySelector('main');
@@ -45,6 +46,10 @@ const pageConfiguration = {
     aboutUs: {
         name: 'aboutUs',
         controller: new AboutUsController($main),
+    },
+    images: {
+        name: 'images',
+        controller: new ImagesController($main),
     },
 };
 

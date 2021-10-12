@@ -83,10 +83,15 @@ body {
     transform: translate(-50%, -50%);
 }
 
-.edit-profile {
+.edit-profile,.images {
     width: 100%;
     display: flex;
-    height: 100%;
+    max-height: 100%;
+    overflow: auto;
+    align-items: flex-start;
+    align-self: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .users-table {
@@ -260,7 +265,6 @@ body {
     width: 50%;
     align-items: flex-start;
     align-self: flex-start;
-
     justify-content: space-between;
 }
 
@@ -269,10 +273,8 @@ body {
     margin: 5px;
 }
 
-
 .photo-container {
     padding: 1em 0;
-    /*float: left;*/
     overflow: auto;
     width: 50%;
 }
@@ -345,8 +347,48 @@ body {
     text-transform: uppercase;
 }
 
-.content-details p {
+
+.photo-container .content:hover .content-details {
+    top: 75%;
+    left: 50%;
+    opacity: 1;
+}
+
+.photo-container .details {
+    display: flex;
+    justify-content: space-around;
+}
+
+.photo-container .details-avatar-container img.details-avatar-image {
+    border: 3px solid lightgreen;
+    box-sizing: border-box;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-radius: 25%;
+}
+
+.images-container {
+    max-height: 605px;
+    overflow: auto;
+   background:  #f5f5fa;
+}
+
+.content-details .details h3 {
+    align-self: end;
+}
+.content-details .details-avatar-container {
+    width: 50px;
+    height: 65px;
+}
+.details-date {
+    display: flex;
+    margin-left: 20px;
+}
+.photo-container .content-details p {
     color: #fff;
+    padding-left: 5%;
+    margin: 0;
     font-size: 0.8em;
 }
 
@@ -359,7 +401,8 @@ body {
     position: relative;
 }
 
-.login .form h2, .sign-up .form h2, .edit-profile h2, .delete-profile h2, .users-table h2 {
+.login .form h2, .sign-up .form h2, .edit-profile h2, .delete-profile h2, .users-table h2,
+.images-container h2 {
     background: #f5f5fa;
     display: block;
     box-sizing: border-box;
@@ -371,6 +414,14 @@ body {
     font-size: 19px;
 }
 
+.images-container h2 {
+    margin: 0;
+}
+
+.users-table h2{
+    margin: 0;
+    padding: 30px;
+}
 .delete-profile .form h2 {
     text-align: center;
     padding: 30px 40px;
@@ -437,8 +488,27 @@ body {
     padding-bottom: 8px;
 }
 
+.users-table-header {
+    display: flex;
+    background: #f5f5fa;
+}
+
 .users-table .users-table-form .button {
     padding: 0 0 0 5px;
+}
+
+.users-table .users-table-form .button.button-view-images {
+    width: 100%;
+    position: relative;
+    cursor: pointer;
+    box-sizing: border-box;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    outline: none;
+    height: 50%;
+    align-self: center;
+    padding: 0 35px;
 }
 
 .login .form .button .arrow-wrapper, .sign-up .form .button .arrow-wrapper,
@@ -467,9 +537,16 @@ body {
     height: 35px;
 }
 
+.users-table .users-table-header .button.button-view-images .arrow-wrapper {
+    width: 100%;
+    height: 55px;
+}
+
 .login .form .button:hover .button-text, .sign-up .form .button:hover .button-text,
 .edit-profile .form .button:hover .button-text,
-.delete-profile .form .button:hover .button-text, .users-table .users-table-form .button:hover .button-text {
+.delete-profile .form .button:hover .button-text,
+.users-table .users-table-form .button:hover .button-text,
+.users-table .users-table-form .button.button-view-images:hover .button-text {
     transition: 1.5s color;
     color: black;
 }
@@ -507,7 +584,8 @@ body {
 .login .form .button .button-text, .sign-up .form .button .button-text,
 .edit-profile .form .button .button-text,
 .delete-profile .form .button .button-text,
-.users-table .users-table-form .button .button-text {
+.users-table .users-table-form .button .button-text,
+.users-table .users-table-form .button.button-view-images .button-text {
     position: absolute;
     top: 0;
     left: 0;

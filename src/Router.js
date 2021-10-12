@@ -7,6 +7,7 @@ export class Router {
       '/users': () => pageResolver.goTo(pageResolver.pageMapping.usersTable.name),
       '/user': (params) => pageResolver.goTo(pageResolver.pageMapping.editUser.name, params),
       '/aboutUs': () => pageResolver.goTo(pageResolver.pageMapping.aboutUs.name),
+      '/images': () => pageResolver.goTo(pageResolver.pageMapping.images.name),
       '/': () => pageResolver.goTo(pageResolver.pageMapping.login.name),
     };
 
@@ -22,40 +23,5 @@ export class Router {
     serviceHistory.stepBack(() =>this.routes[location.pathname](routeConfig.params));
   }
 
-
-
-  // changeRoute (path) {
-  //   const url = `${window.location.origin}${path}`;
-  //   window.history.pushState({}, path, url);
-  //
-  //   const routePath = window.location.pathname;
-  //   const params = this._getSearchParams();
-  //
-  //   console.log(params);
-  //   console.log(routePath);
-  //
-  //   this.routes[routePath](params);
-  //
-  //   window.onpopstate = () => this.routes[routePath](params);
-  //
-  // }
-  //
-  // _getSearchParams() {
-  //   const params = window
-  //     .location
-  //     .search
-  //     .replace('?','')
-  //     .split('&')
-  //     .reduce((params,paramToSearch) =>{
-  //         const [name, value] = paramToSearch.split('=');
-  //         params[name] = value;
-  //         return params;
-  //       },
-  //       {}
-  //     );
-  //   console.log(params);
-  //
-  //   return params;
-  // }
 }
 

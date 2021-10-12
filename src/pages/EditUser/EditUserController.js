@@ -1,14 +1,14 @@
 import { EditUserComponent } from './EditUserComponent';
 import { router } from '../../app';
 import { BaseController } from '../BaseController';
-import { addImage, deleteImage, getUser, getUserPhotos, updateUser, uploadAvatar } from '../../api';
+import { addImage, deleteImage, getUser, getUserImages, updateUser, uploadAvatar } from '../../api';
 
 export class EditUserController extends BaseController {
   constructor (place) {
     super(undefined);
     this.place = place;
     this.state = '';
-    this.handlers = this.handlers = {
+    this.handlers = {
       onAvatarLoad: {
         queryParam: '#photo-upload',
         eventType: 'change',
@@ -25,7 +25,7 @@ export class EditUserController extends BaseController {
         callback: this._onDeleteAvatar.bind(this),
       },
       onDeleteUserPhoto: {
-        queryParam: '.delete-user-photo',
+        queryParam: '.user-photos',
         eventType: 'click',
         callback: this._onDeleteUserPhoto.bind(this),
       },
@@ -84,7 +84,7 @@ export class EditUserController extends BaseController {
     const userImage = await addImage(userImageInfo);
     const urlEncodedName = encodeURI(userImage.name);
     const date = new Date(userImage.date).toISOString().slice(0, 10);
-    const src = `http://localhost:8080/userImages/${this.state.id}/${urlEncodedName}`;
+    const src = `http://localhost:8080/userImages/${urlEncodedName}`;
 
     this.view.renderImageCard({ ...userImage, src, date });
   }
@@ -116,7 +116,6 @@ export class EditUserController extends BaseController {
       this.modifyState(state => {state.avatarId = savedFileId;});
     }
 
-    // authManager.updateUser(this.state);
     updateUser(this.state);
     router.changeRoute('/users');
   }
@@ -151,8 +150,8 @@ export class EditUserController extends BaseController {
 
   async connect (params) {
     const user = await getUser(params.id);
-    const userPhotosInfo = await getUserPhotos(params.id);
-    const photos = this._handlePhotos(userPhotosInfo, params.id);
+    const userPhotosInfo = await getUserImages(params.id);
+    const photos = this._handlePhotos(userPhotosInfo);
     this.state = {
       ...user,
       photos,
@@ -179,7 +178,7 @@ export class EditUserController extends BaseController {
     this.state = newState;
   }
 
-  _handlePhotos (photosData, userId) {
+  _handlePhotos (photosData) {
     if (!photosData) {
       return null;
     }
@@ -188,7 +187,7 @@ export class EditUserController extends BaseController {
       return {
         date: new Date(photoData.date).toISOString().slice(0, 10),
         name: photoData.name,
-        src: `http://localhost:8080/userImages/${userId}/${photoData.name}`
+        src: `http://localhost:8080/userImages/${photoData.name}`
       };
     });
   }
@@ -203,12 +202,7 @@ export class EditUserController extends BaseController {
   }
 
   _onPhotoLoad (event) {
-    if (!event.target.value) {
-      return;
-    }
-    event.stopPropagation();
     this.loadUserPhoto(event.target.files[0]);
-    event.target.value = null
   }
 
   _onDeleteAvatar () {
@@ -216,7 +210,9 @@ export class EditUserController extends BaseController {
   }
 
   _onDeleteUserPhoto (event) {
-    this.deleteUserPhoto(event.target);
+    if(event.target.dataset.name) {
+      this.deleteUserPhoto(event.target);
+    }
   }
 
   _onMaleClick (event) {

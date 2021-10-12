@@ -24,7 +24,16 @@ export class UsersTableController extends BaseController{
         eventType: 'click',
         callback: this._onPopUpClick.bind(this),
       },
+      onViewImages: {
+        queryParam: '#view-images',
+        eventType: 'click',
+        callback: this._onViewImages.bind(this),
+      },
     };
+  }
+
+  viewImages() {
+    router.changeRoute('/images');
   }
 
   editProfile (userId) {
@@ -82,4 +91,7 @@ export class UsersTableController extends BaseController{
     }
   }
 
+  _onViewImages() {
+    this.viewImages();
+  }
 }
