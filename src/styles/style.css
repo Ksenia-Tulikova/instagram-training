@@ -83,7 +83,7 @@ body {
     transform: translate(-50%, -50%);
 }
 
-.edit-profile,.images {
+.edit-profile, .images {
     width: 100%;
     display: flex;
     max-height: 100%;
@@ -216,7 +216,7 @@ body {
     margin: 5px;
     margin-left: auto;
     display: block;
-    cursor:pointer;
+    cursor: pointer;
     width: fit-content;
 }
 
@@ -347,9 +347,8 @@ body {
     text-transform: uppercase;
 }
 
-
 .photo-container .content:hover .content-details {
-    top: 75%;
+    top: 65%;
     left: 50%;
     opacity: 1;
 }
@@ -359,32 +358,84 @@ body {
     justify-content: space-around;
 }
 
-.photo-container .details-avatar-container img.details-avatar-image {
-    border: 3px solid lightgreen;
-    box-sizing: border-box;
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-    border-radius: 25%;
-}
-
 .images-container {
     max-height: 605px;
     overflow: auto;
-   background:  #f5f5fa;
+    background: #f5f5fa;
+}
+
+.likes-quantity {
+    margin: 0;
+    font-size: 20px;
+}
+
+.photo-likes,
+.photo-comments {
+    text-align: center;
+    color: rgb(239 251 255);
+    padding: 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    border-right: 1px solid #ddd;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.5em;
+    text-transform: uppercase;
+}
+
+.photo-likes .photo-likes-icon {
+    padding-right: 5px;
+    cursor: pointer;
+}
+
+/*style for users who liked*/
+.liked-users {
+    margin: 5px 0;
+    max-height: 35px;
+    overflow: hidden;
+    max-width: 150px;
+}
+
+.liked-user-container, .details-avatar-container {
+    background: red;
+    display: inline-block;
+    border-radius: 100%;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    margin: 0px 4px;
+    background: linear-gradient(45deg, #ff0000, #ffc107);
+}
+
+
+img.liked-user, img.details-avatar-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.photo-likes .photo-likes-icon.liked {
+    transition: color 1s;
+    color: #df0446;
 }
 
 .content-details .details h3 {
     align-self: end;
 }
+
 .content-details .details-avatar-container {
     width: 50px;
     height: 65px;
 }
+
 .details-date {
     display: flex;
     margin-left: 20px;
 }
+
 .photo-container .content-details p {
     color: #fff;
     padding-left: 5%;
@@ -418,10 +469,11 @@ body {
     margin: 0;
 }
 
-.users-table h2{
+.users-table h2 {
     margin: 0;
     padding: 30px;
 }
+
 .delete-profile .form h2 {
     text-align: center;
     padding: 30px 40px;

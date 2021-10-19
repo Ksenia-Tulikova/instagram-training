@@ -1,4 +1,4 @@
-import { router } from '../../app.js';
+import { authManager, router } from '../../app.js';
 import { SignUpComponent } from './SignUpComponent';
 import { BaseController } from '../BaseController';
 import { validator } from './validator';
@@ -147,7 +147,7 @@ export class SignUpController extends BaseController {
 
   }
 
-  submit () {
+  async submit () {
     const authData = {
       'login': this.state.login.value,
       'password': this.state.password.value,
@@ -163,13 +163,12 @@ export class SignUpController extends BaseController {
     const validationResult = validator.validateGlobal(authData);
 
     if (validationResult.isValid) {
-      // authManager.setNewUser({...authData, ...additionalAuthData});
-      createUser({...authData, ...additionalAuthData});
+      const userId = await createUser({...authData, ...additionalAuthData});
+
+      authManager.setActiveUser(userId);
       this.modifyState(state => state.isLogged = true);
 
       router.changeRoute('/users');
-
-      // pageResolver.goTo(pageResolver.pageMapping.usersTable.name);
 
     } else {
       this.modifyState(state => {

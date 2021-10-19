@@ -11,8 +11,18 @@ const userController = require('./UserController');
 
 const app = express();
 
+const bp = require('body-parser')
+app.use(bp.json())
+app.use(bp.urlencoded({ extended: true }))
+
+
 app.use(fileUpload({}));
 app.use(express.static('public'));
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "YOUR-DOMAIN.TLD"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 // => start server
 const startServer = () => {
@@ -56,3 +66,8 @@ app.get('/users/:userId/images', imageController.get);
 app.delete('/users/:userId/images', imageController.delete);
 
 app.get('/images', imageController.getAll);
+
+app.post('/images/:imageId/like', imageController.addLike);
+
+app.post('/images/:imageId/unLike', imageController.deleteLike);
+

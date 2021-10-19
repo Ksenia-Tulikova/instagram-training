@@ -80,7 +80,7 @@ export class EditUserController extends BaseController {
   }
 
   async loadUserPhoto (file) {
-    const userImageInfo = { userId: this.state.id, image: file };
+    const userImageInfo = { userId: this.state._id, image: file };
     const userImage = await addImage(userImageInfo);
     const urlEncodedName = encodeURI(userImage.name);
     const date = new Date(userImage.date).toISOString().slice(0, 10);
@@ -125,7 +125,7 @@ export class EditUserController extends BaseController {
   }
 
   deleteAvatar () {
-    this.uploadedFile = undefined;
+    this.uploadedAvatarFile = undefined;
     this.modifyState(state => {state.avatarId = undefined;});
     const photoParams = {
       queryParam: '.avatar',
@@ -142,13 +142,14 @@ export class EditUserController extends BaseController {
   }
 
   deleteUserPhoto (image) {
-    deleteImage({ userId: this.state.id, name: image.dataset.name });
+    deleteImage({ userId: this.state._id, name: image.dataset.name });
     this.view.deleteImageCard(image);
     //remove photo from db
     //remove from express
   }
 
   async connect (params) {
+    console.log(params);
     const user = await getUser(params.id);
     const userPhotosInfo = await getUserImages(params.id);
     const photos = this._handlePhotos(userPhotosInfo);

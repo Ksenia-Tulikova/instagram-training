@@ -1,4 +1,4 @@
-import { router } from '../../app.js';
+import { authManager, router } from '../../app.js';
 import {LoginComponent} from "./LoginComponent";
 import { BaseController } from '../BaseController';
 import { authenticate } from '../../api';
@@ -59,7 +59,6 @@ export class LoginController extends BaseController {
     _onSignUp(event) {
         event.preventDefault();
         router.changeRoute('/signUp');
-        // pageResolver.goTo(pageResolver.pageMapping.signUp.name);
     }
 
     connect() {
@@ -76,10 +75,6 @@ export class LoginController extends BaseController {
     }
 
     async submit() {
-        // const isAuth = authManager.isAuth({
-        //     'login': this.state.login.value,
-        //     'password': this.state.password.value
-        // });
         const isAuth = await authenticate({
                 'login': this.state.login.value,
                 'password': this.state.password.value
@@ -91,7 +86,7 @@ export class LoginController extends BaseController {
 
     updateIsAuthErrorStatus(value) {
         if(value) {
-            // pageResolver.goTo(pageResolver.pageMapping.usersTable.name);
+            authManager.setActiveUser(value);
             router.changeRoute('/users');
         } else {
             this.modifyState(state => state.validCredentials = !!value);

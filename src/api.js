@@ -8,7 +8,7 @@ const fillFormDataWithData = (data) => {
   }
 
   return formData;
-}
+};
 
 export const uploadAvatar = async ({ avatar, login }) => {
   const formData = new FormData();
@@ -83,7 +83,7 @@ export const updateUser = async (userData) => {
 };
 
 export const removeUser = async (id) => {
-  const formData = fillFormDataWithData({id});
+  const formData = fillFormDataWithData({ id });
   const response = await axios({
     method: 'DELETE',
     url: `http://localhost:8080/users/${id}`,
@@ -106,34 +106,65 @@ export const addImage = async (userImageInfo) => {
   return response.data;
 };
 
-export const deleteImage = async ({userId, name}) => {
-  const formData = fillFormDataWithData({userId, name});
+
+export const deleteImage = async ({ userId, name }) => {
+  const formData = fillFormDataWithData({ userId, name });
   const response = await axios({
-    method:'DELETE',
+    method: 'DELETE',
     data: formData,
-    url:`http://localhost:8080/users/${userId}/images`,
-    headers:{'Content-Type': 'multipart/form-data'},
+    url: `http://localhost:8080/users/${userId}/images`,
+    headers: { 'Content-Type': 'multipart/form-data' },
   });
 
   return response.data;
-}
+};
 
 export const getUserImages = async (userId) => {
   const response = await axios({
-    method:'GET',
-    url:`http://localhost:8080/users/${userId}/images`,
-    headers:{'Content-Type': 'multipart/form-data'},
+    method: 'GET',
+    url: `http://localhost:8080/users/${userId}/images`,
+    headers: { 'Content-Type': 'multipart/form-data' },
   });
 
   return response.data;
-}
+};
 
 export const getImages = async () => {
   const response = await axios({
-    method:'GET',
-    url:`http://localhost:8080/images`,
-    headers:{'Content-Type': 'multipart/form-data'},
+    method: 'GET',
+    url: `http://localhost:8080/images`,
+    headers: { 'Content-Type': 'multipart/form-data' },
   });
 
   return response.data;
-}
+};
+
+export const addLike = async (userId, imageId) => {
+  // const formData = fillFormDataWithData({userId, imageId});
+
+  const response = await axios({
+    method: 'POST',
+    data: { userId },
+    url: `http://localhost:8080/images/${imageId}/like`, //
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  });
+
+  return response.data;
+};
+
+export const unLike = async (userId, imageId) => {
+  // const formData = fillFormDataWithData({userId, imageId});
+
+  const response = await axios({
+    method: 'POST',
+    data: { userId },
+    url: `http://localhost:8080/images/${imageId}/unlike`, // images/imageId/unLike
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  });
+
+  return response.data;
+};

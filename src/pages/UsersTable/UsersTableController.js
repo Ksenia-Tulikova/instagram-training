@@ -59,7 +59,7 @@ export class UsersTableController extends BaseController{
   async connect () {
     // this.state.users = Object.values(authManager.getUsers());
     this.state.users = await getUsers();
-
+console.log(this.state.users);//view _id clear id that is uuid()
     this.view = new UsersTableComponent(this.place, this.handlers);
     return this.view.render(this.state);
   }

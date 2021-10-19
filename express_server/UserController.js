@@ -10,12 +10,16 @@ class UserController {
       return res.status(400).send('No data were uploaded.');
     }
 
-    User.getUserByParam('login', req.body.login, (err, user) => {
+    User.getUserByParam(req.body.login, (err, user) => {
       if (err) {
         return res.status(400).send('Something got wrong');
       }
 
-      return res.end(`${user.password === req.body.password}`);
+      if (!user) {
+        return res.end(false);
+      }
+
+      return res.end(`${user.password === req.body.password && user._id}`);
     });
   }
 
@@ -23,12 +27,13 @@ class UserController {
     if (!req.body || Object.keys(req.body).length === 0) {
       return res.status(400).send('No data were uploaded.');
     }
-
+    debugger;
     User.create(req.body, (err, user) => {
       if (err) {
         return res.status(400).send('Something got wrong');
       }
-      res.send(`User ${user.login} was created`);
+      // res.send(`User ${user.login} was created`);
+      res.json(user._id);
     });
   }
 
@@ -63,7 +68,7 @@ class UserController {
       return res.status(400).send('No data were uploaded.');
     }
 
-    User.findById(req.params.id, (err, user) => {
+    User.findUser(req.params.id, (err, user) => {
       if (err) {
         return res.status(400).send('Something got wrong');
       }

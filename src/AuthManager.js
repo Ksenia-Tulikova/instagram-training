@@ -7,8 +7,8 @@ export class AuthManager {
         return !!userData && (JSON.parse(userData).password === authData.password);
     }
 
-    setNewUser(authData) {
-        localStorage.setItem(authData.login, JSON.stringify(authData));
+    setActiveUser(userId) {
+        sessionStorage.setItem('activeUserId', JSON.stringify(userId));
     }
 
     deleteUser(localStorageKey) {
@@ -24,8 +24,8 @@ export class AuthManager {
         return users;
     }
 
-    getUser(localStorageKey) {
-        return JSON.parse(localStorage.getItem(localStorageKey));
+    getActiveUserId() {
+        return JSON.parse(sessionStorage.getItem('activeUserId'));
     }
 
     updateUser(user) {

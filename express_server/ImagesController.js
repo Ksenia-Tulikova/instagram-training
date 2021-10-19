@@ -16,7 +16,9 @@ class UserImagesController {
     if (!req.files || Object.keys(req.files).length === 0) {
       return res.status(400).send('No file were uploaded.');
     }
+
     const userId = req.body.userId;
+    console.log(userId);
     const image = {
       name: req.files.image.name,
       file: req.files.image,
@@ -34,6 +36,7 @@ class UserImagesController {
       if (err) {
         return res.status(400).send('Something got wrong');
       }
+      console.log(images);
       images ? res.json(images) : res.end('');
     });
   }
@@ -51,21 +54,29 @@ class UserImagesController {
   async getAll (req, res) {
     const images = await UserImages.getAll();
 
-    const users = await User.findAll();
+    res.json(images);
+  }
 
-    const result = images.map(img => {
-      const user = users.find((user => user.id === img.userId));
-      const image = {
-        userId: img.userId,
-        date: img.date,
-        login: user.login,
-        avatar: user.avatarId,
-        image: img.name
-      };
-      return image;
-    });
+  async addLike (req, res) {
 
-    res.json(result);
+    const likedImageInfo = {
+      userId: req.body.userId,
+      imageId: req.params.imageId,
+    };
+    await UserImages.addLike(likedImageInfo);
+
+    res.status(200).send(`Like was added`);
+  }
+
+  async deleteLike (req, res) {
+    const likedImageInfo = {
+      userId: req.body.userId,
+      imageId: req.params.imageId,
+    };
+
+    await UserImages.deleteLike(likedImageInfo);
+
+    res.status(200).send('Like was deleted');
   }
 
   uploadAvatarOnServer (req, res) {
@@ -93,6 +104,7 @@ class UserImagesController {
     try {
       const imageInfo = {
         userId,
+        likedBy: [],
         name,
         date: Date.now(),
       };

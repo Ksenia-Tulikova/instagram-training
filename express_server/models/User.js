@@ -5,7 +5,7 @@ const { v4: uuid } = require('uuid');
 const userSchema = new Schema({
   name: String,
   country: String,
-  id: String,
+  // id: String,
   dateOfBirth: String,
   login: String,
   gender: String,
@@ -16,8 +16,8 @@ const userSchema = new Schema({
   avatarId: String
 });
 
-userSchema.statics.findById = function (id, cb) {
-  return this.findOne({ id }, cb);
+userSchema.statics.findUser = function (_id, cb) {
+  return this.findById(_id , cb);
 };
 
 userSchema.statics.findAll = function (cb) {
@@ -25,27 +25,28 @@ userSchema.statics.findAll = function (cb) {
 };
 
 userSchema.statics.create = function (userData, cb) {
-  const user = new User({ ...userData, id: uuid()});
+  console.log(userData);
+  const user = new User({ ...userData});
   return user.save(cb);
 };
 
-userSchema.statics.getUserByParam = function (param, value, cb) {
-  return this.findOne({ param: new RegExp(value, 'i') }, cb);
+userSchema.statics.getUserByParam = function (userLogin , cb) {
+  return this.findOne({ login: userLogin }, cb);
 };
 
 userSchema.statics.modify = function (user, cb) {
-  return this.findOneAndUpdate({ id: user.id}, { $set: { ...user } }, cb);
+  return this.findOneAndUpdate({ _id: user._id}, { $set: { ...user } }, cb);
 };
 
-userSchema.statics.remove = function (id) {
-  return this.findOneAndDelete({ id: new RegExp(id, 'i') });
+userSchema.statics.remove = function (_id) {
+  return this.findOneAndDelete({ _id});
 };
 
 userSchema.statics.removeAll = function (cb) {
-  return User.remove({}, cb);
+  return this.remove({}, cb);
 };
 
 
 // const User = mongoose.model('User', userSchema);
 
-module.exports = mongoose.models.User || mongoose.model('User', userSchema);;
+const User =(module.exports = mongoose.models.User || mongoose.model('User', userSchema));

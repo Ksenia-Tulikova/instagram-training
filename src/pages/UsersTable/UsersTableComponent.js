@@ -8,6 +8,7 @@ export default class UsersTableComponent extends BaseComponent {
   }
 
   render (state) {
+    console.log(state);
     let htmlToRender = this.htmlTemplate;
 
     const usersHtml = state.users.map(user => (

@@ -104,7 +104,7 @@ export const TEMPLATES = {
                     <div class="user-login">
                         <span>{login}</span>
                     </div>
-                    <div class="edit-user-actions"  data-user-id="{id}">
+                    <div class="edit-user-actions"  data-user-id="{_id}">
                         <button type="button" class="button button-edit-user">
                             <div class="arrow-wrapper">
                                 <span class="arrow"></span>
@@ -221,27 +221,43 @@ export const TEMPLATES = {
                               {images}
                             </div>
                          </div>`,
-  albumImage: `<div class="photo-container {userId}">
-                  <div class="content">
-                      <div class="content-overlay"></div>
-                      <img
-                           class="content-image"
-                           src={image}>
-                      <div class="content-details fadeIn-top">
-                        
-                        <div class="details">
-                          <h3>{login}</h3>
-                          <div class="details-avatar-container">
-                            <img
-                             class="details-avatar-image"
-                             src={avatar}>
-                          </div>
-                        </div>  
-                        <p class ="details-date">{date}</p>              
-                      </div>
-                  </div>
-              </div>`,
-
+  albumImage: `
+  <div class="photo-container">
+    <div class="content">
+        <div class="content-overlay"></div>
+        <img
+                class="content-image"
+                src={image}>
+        <div class="content-details fadeIn-top">
+            <div class="details">
+                <h3>{login}</h3>
+                
+                <div class="details-avatar-container">
+                        <img class="details-avatar-image" src={avatar} />
+                </div>
+            </div>
+            <p class="details-date">{date}</p>
+            <div class="photo-likes">
+                <h5 class="likes-quantity">
+                    <i class="fa fa-heart photo-likes-icon {likedImageMyself}"
+                       aria-hidden="true"
+                       data-likes={likes}
+                       data-image-id={imageId}>
+                    </i><span class="likes-quantity-text">{likes}</span>
+                </h5>
+                <div class="liked-users">
+                    {likedUsersAvatar}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+  `,
+  likedUserAvatar: `
+  <div class="liked-user-container" id = {userId} >
+    <img class="liked-user" src= {likedUserAvatar} />
+  </div>
+  `,
 };
 
 export class BaseComponent {
