@@ -71,3 +71,7 @@ app.post('/images/:imageId/like', imageController.addLike);
 
 app.post('/images/:imageId/unLike', imageController.deleteLike);
 
+app.post('/images/:imageId/comments', imageController.addComment);
+
+app.post('/images/:imageId/comments/:commentId', imageController.deleteComment);
+

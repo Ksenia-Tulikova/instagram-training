@@ -49,4 +49,4 @@ userSchema.statics.removeAll = function (cb) {
 
 // const User = mongoose.model('User', userSchema);
 
-const User =(module.exports = mongoose.models.User || mongoose.model('User', userSchema));
+const User = (module.exports = mongoose.models.User || mongoose.model('User', userSchema));

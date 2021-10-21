@@ -1,4 +1,7 @@
 const UserImages = require('./models/userImages');
+const Like = require('./models/Like');
+const Comment = require('./models/Comment');
+
 const fs = require('fs');
 const User = require('./models/User');
 
@@ -58,25 +61,50 @@ class UserImagesController {
   }
 
   async addLike (req, res) {
+    const userId = req.body.userId;
+    const imageId = req.params.imageId;
+    const like = await Like.create(userId);
 
-    const likedImageInfo = {
-      userId: req.body.userId,
-      imageId: req.params.imageId,
-    };
-    await UserImages.addLike(likedImageInfo);
+    await UserImages.addLike({ likeId: like._id, imageId });
 
     res.status(200).send(`Like was added`);
   }
 
   async deleteLike (req, res) {
-    const likedImageInfo = {
+    const userId = req.body.userId;
+    const imageId = req.params.imageId;
+
+    const like = await Like.delete(userId);
+    const likeId = like._id;
+
+    await UserImages.deleteLike({ likeId, imageId });
+
+    res.status(200).send(like);
+
+  }
+
+  async addComment (req, res) {
+    const imageId = req.params.imageId;
+    const commentData = {
       userId: req.body.userId,
-      imageId: req.params.imageId,
+      value: req.body.comment,
     };
 
-    await UserImages.deleteLike(likedImageInfo);
+    const comment = await Comment.create(commentData);
+    await UserImages.addComment({ commentId: comment._id, imageId });
 
-    res.status(200).send('Like was deleted');
+    res.status(200).send(comment);
+  }
+
+  async deleteComment (req, res) {
+    const commentId = req.params.commentId;
+    const imageId = req.params.imageId;
+
+    await Comment.delete(commentId);
+    await UserImages.deleteComment({ commentId, imageId });
+
+    res.status(200).send('Comment was deleted!');
+
   }
 
   uploadAvatarOnServer (req, res) {

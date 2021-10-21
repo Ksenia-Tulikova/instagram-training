@@ -68,6 +68,7 @@ export class ImagesController extends BaseController {
 
   async connect () {
     const images = await getImages();
+    console.log(images);
     this.state = this._composeImageDate(images);
     this._createSrc();
     this._convertDateToRightFormat();
@@ -120,21 +121,22 @@ export class ImagesController extends BaseController {
         date: img.date,
         login: img.userId.login,
         avatar: img.userId.avatarId,
-        likes: img.likedBy.length,
-        likedBy: img.likedBy,
+        likes: img.likes.length,
+        likedBy: img.likes,
         imageId: img._id,
         image: img.name,
-        likedImageMyself: this._doesImageLikedByActiveUser(img.likedBy) ? 'liked' : '',
-        likedUsersAvatars: this._getUserAvatars(img.likedBy),
+        likedImageMyself: this._doesImageLikedByActiveUser(img.likes) ? 'liked' : '',
+        likedUsersAvatars: this._getUserAvatars(img.likes),
       };
     });
   }
 
-  _getUserAvatars (likedByUsers) {
-    if (likedByUsers.length > 3) {
-      likedByUsers = likedByUsers.slice(-3);
+  _getUserAvatars (likes) {
+    if (likes.length > 3) {
+      likes = likes.slice(-3);
     }
-    return likedByUsers.reverse().map(user => {
+    return likes.reverse().map(like => {
+      const user = like.likedBy;
       return {
         likedUserAvatar: `${this.avatarPath}${user.avatarId ? user.avatarId : 'default_avatar.jpg'}`,
         userId: user._id
@@ -142,8 +144,8 @@ export class ImagesController extends BaseController {
     });
   }
 
-  _doesImageLikedByActiveUser (likedByUsers) {
-    return likedByUsers.find(user => user._id === this.activeUserId);
+  _doesImageLikedByActiveUser (likes) {
+    return likes.find(like => like.likedBy._id === this.activeUserId);
   }
 
   _onLikeClick (e) {
