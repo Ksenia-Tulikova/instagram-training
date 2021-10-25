@@ -168,3 +168,31 @@ export const unLike = async (userId, imageId) => {
 
   return response.data;
 };
+
+export const addComment = async (commentData) => {
+  const response = await axios({
+    method: 'POST',
+    data: {
+      userId: commentData.userId,
+      comment: commentData.value
+    },
+    url: `http://localhost:8080/images/${commentData.imageId}/comments`,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  });
+
+  return response.data;
+};
+
+export const deleteComment = async (commentId, imageId) => {
+  const response = await axios({
+    method: 'POST',
+    url: `http://localhost:8080/images/${imageId}/comments/${commentId}`,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  });
+
+  return response.data;
+};

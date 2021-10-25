@@ -36,19 +36,20 @@ userImagesSchema.statics.getAll = function () {
       'model': 'User'
     })
     .populate({
-      'path': 'likes',
-      'model': 'Like',
-      populate: {
-        path: 'likedBy'
-      }
-    })
-    .populate({
       'path': 'comments',
       'model': 'Comment',
       populate: {
         path: 'commentedBy'
       }
     })
+    .populate({
+      'path': 'likes',
+      'model': 'Like',
+      populate: {
+        path: 'likedBy'
+      }
+    })
+
     .sort({ 'date': -1 });
 };
 

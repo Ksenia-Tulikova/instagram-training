@@ -398,7 +398,7 @@ body {
     max-width: 150px;
 }
 
-.liked-user-container, .details-avatar-container {
+.liked-user-container, .details-avatar-container, .comment-author-avatar-container {
     background: red;
     display: inline-block;
     border-radius: 100%;
@@ -410,7 +410,7 @@ body {
 }
 
 
-img.liked-user, img.details-avatar-image {
+img.liked-user, img.details-avatar-image, img.comment-author-avatar {
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -446,6 +446,71 @@ img.liked-user, img.details-avatar-image {
 .fadeIn-top {
     top: 20%;
 }
+
+.comments, .add-comment-container {
+    overflow: auto;
+    width: 90%;
+    max-width: 400px;
+    margin: auto;
+}
+
+.comments {
+    max-height: 100px;
+}
+.add-comment-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+input#add-comment {
+    flex-grow: 1;
+}
+
+.comment {
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.comment-author-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-author {
+    align-self: center;
+    margin: 5px 0;
+}
+
+.comment-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    flex-grow: 1;
+}
+
+.comment-text-container {
+    margin-left: 15px;
+}
+
+.comment-text {
+    margin: 0;
+    padding: 0;
+}
+
+.comment-delete {
+    margin: 0 5px;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+.comment-delete:hover {
+    color: red;
+}
+
+/*.delete-user-comment{*/
+/*    pointer-events: none;*/
+/*}*/
 
 .login .form, .sign-up .form, .edit-profile .form, .delete-profile .form {
     display: block;
@@ -517,7 +582,8 @@ img.liked-user, img.details-avatar-image {
 }
 
 .login .form .button, .sign-up .form .button, .edit-profile .form .button,
-.delete-profile .form .button, .users-table .users-table-form .button {
+.delete-profile .form .button, .users-table .users-table-form .button,
+.images .photo-container button {
     width: 100%;
     position: relative;
     cursor: pointer;
@@ -527,6 +593,16 @@ img.liked-user, img.details-avatar-image {
     border: 0;
     background: transparent;
     outline: none;
+}
+
+.images .photo-container button {
+    max-width: 35%;
+    padding: 0;
+    margin-left: 5px;
+}
+
+.images .photo-container button .arrow-wrapper {
+    max-height: 25px;
 }
 
 .edit-profile .form .button-save, .edit-profile .form .button-close {
@@ -565,7 +641,9 @@ img.liked-user, img.details-avatar-image {
 
 .login .form .button .arrow-wrapper, .sign-up .form .button .arrow-wrapper,
 .edit-profile .form .button .arrow-wrapper,
-.delete-profile .form .button .arrow-wrapper, .users-table .users-table-form .button .arrow-wrapper {
+.delete-profile .form .button .arrow-wrapper,
+.users-table .users-table-form .button .arrow-wrapper,
+.images .photo-container .button .arrow-wrapper {
     transition: all 0.45s ease-in-out;
     position: relative;
     margin: 0;
@@ -598,7 +676,8 @@ img.liked-user, img.details-avatar-image {
 .edit-profile .form .button:hover .button-text,
 .delete-profile .form .button:hover .button-text,
 .users-table .users-table-form .button:hover .button-text,
-.users-table .users-table-form .button.button-view-images:hover .button-text {
+.users-table .users-table-form .button.button-view-images:hover .button-text,
+.images .photo-container .button.button-view-images:hover .button-text {
     transition: 1.5s color;
     color: black;
 }
@@ -606,7 +685,8 @@ img.liked-user, img.details-avatar-image {
 .login .form .button .arrow-wrapper .arrow, .sign-up .form .button .arrow-wrapper .arrow,
 .edit-profile .form .button .arrow-wrapper .arrow,
 .delete-profile .form .button .arrow-wrapper .arrow,
-.users-table .users-table-form .button .arrow-wrapper .arrow {
+.users-table .users-table-form .button .arrow-wrapper .arrow,
+.images .photo-container .button .arrow-wrapper .arrow {
     position: absolute;
     top: 50%;
     margin: auto;
@@ -621,7 +701,8 @@ img.liked-user, img.details-avatar-image {
 .login .form .button .arrow-wrapper .arrow:before, .sign-up .form .button .arrow-wrapper .arrow:before
 .edit-profile .form .button .arrow-wrapper .arrow:before,
 .delete-profile .form .button .arrow-wrapper .arrow:before,
-.users-table .users-table-form .button .arrow-wrapper .arrow:before {
+.users-table .users-table-form .button .arrow-wrapper .arrow:before,
+.images .photo-container .button .arrow-wrapper .arrow:before {
     position: absolute;
     content: '';
     top: -4px;
@@ -637,7 +718,8 @@ img.liked-user, img.details-avatar-image {
 .edit-profile .form .button .button-text,
 .delete-profile .form .button .button-text,
 .users-table .users-table-form .button .button-text,
-.users-table .users-table-form .button.button-view-images .button-text {
+.users-table .users-table-form .button.button-view-images .button-text,
+.images .photo-container .button-text {
     position: absolute;
     top: 0;
     left: 0;
@@ -648,6 +730,10 @@ img.liked-user, img.details-avatar-image {
     line-height: 55px;
     text-align: center;
     text-transform: uppercase;
+}
+
+.images .photo-container .button-text {
+    line-height: 25px;
 }
 
 .users-table .users-table-form .button .button-text {
@@ -722,6 +808,11 @@ img.liked-user, img.details-avatar-image {
     padding-left: 5px;
     margin: 0;
     text-align: center;
+}
+
+.images .photo-container .button-text {
+    font-size: 0.65em;
+    margin: 0;
 }
 
 .male_radio_btn {
