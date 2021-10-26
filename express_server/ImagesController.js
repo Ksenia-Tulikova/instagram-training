@@ -21,7 +21,7 @@ class UserImagesController {
     }
 
     const userId = req.body.userId;
-    console.log(userId);
+
     const image = {
       name: req.files.image.name,
       file: req.files.image,
@@ -33,13 +33,12 @@ class UserImagesController {
   }
 
   get (req, res) {
-    console.log(req.params);
 
     UserImages.get((req.params.userId), (err, images) => {
       if (err) {
         return res.status(400).send('Something got wrong');
       }
-      console.log(images);
+
       images ? res.json(images) : res.end('');
     });
   }
@@ -148,8 +147,8 @@ class UserImagesController {
   _deleteImageFromFolder (name) {
     const imagePath = `public/userImages/${name}`;
 
-    fs.unlink(imagePath, err => {    // delete image
-      if (err) throw err; // не удалось удалить
+    fs.unlink(imagePath, err => {
+      if (err) throw err;
       console.log('Image was deleted');
     });
 

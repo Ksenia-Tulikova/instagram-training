@@ -1,5 +1,5 @@
 import { ImagesComponent } from './ImagesComponent';
-import { addLike, unLike, getImages, getUser, deleteComment, addComment } from '../../api';
+import  API from '../../api';
 import { BaseController } from '../BaseController';
 import { authManager } from '../../app';
 
@@ -40,10 +40,10 @@ export class ImagesController extends BaseController {
   }
 
   async getUser () {
-    this.activeUser = await getUser(this.activeUserId);
+    this.activeUser = await API.users.get(this.activeUserId);
   }
 
-  updateComments($commentInput) {
+  updateComments ($commentInput) {
     this.comments.push({
       value: $commentInput.value,
       userId: this.activeUserId,
@@ -56,7 +56,7 @@ export class ImagesController extends BaseController {
     const imageId = $deleteCommentIcon.closest('.photo-container').dataset.imageId;
 
     //удалить комментарий в массиве
-    deleteComment(commentId, imageId);
+    API.comments.delete(commentId, imageId);
 
     this.view.deleteElement(commentId);
   }
@@ -66,7 +66,7 @@ export class ImagesController extends BaseController {
     const comment = this._getCommentByImageId(imageId);
 
     if (comment) {
-      const commentResponse = await addComment(comment)
+      const commentResponse = await API.comments.add(comment);
       commentResponse.commentedBy = this.activeUser;
 
       this.view.renderNewComment(this._createUserComments([commentResponse]));
@@ -76,46 +76,44 @@ export class ImagesController extends BaseController {
 
   unLike ($likeIcon) {
     const imageId = $likeIcon.dataset.imageId;
+    const likeData = { $likeIcon, imageId, augment: false };
 
-    unLike(this.activeUserId, imageId);
+    API.likes.delete(this.activeUserId, imageId);
 
-    this.modifyState((state) => {
-      const image = this._getImageById(state, imageId);
-      image.likes = --image.likes;
-      return state;
-    });
-
-    const likesQuantity = this._getImageById(this.state, imageId).likes;
-    this.view.updateLikeRender($likeIcon);
-    this.view.updateLikeQuantity($likeIcon, likesQuantity);
+    this.makeLikeChanges(likeData);
     this.view.deleteElement(this.activeUserId);
 
   }
 
   addLike ($likeIcon) {
     const imageId = $likeIcon.dataset.imageId;
+    const likeData = { $likeIcon, imageId, augment: true };
 
-    addLike(this.activeUserId, imageId);
+    API.likes.add(this.activeUserId, imageId);
 
-    this.modifyState((state) => {
-      const image = this._getImageById(state, imageId);
-      image.likes = ++image.likes;
-      return state;
-    });
-
-    const likesQuantity = this._getImageById(this.state, imageId).likes;
-
-    this.view.updateLikeRender($likeIcon);
-    this.view.updateLikeQuantity($likeIcon, likesQuantity);
+    this.makeLikeChanges(likeData);
     this.view.renderAvatar({
       userId: this.activeUserId,
       likedUserAvatar: this._getAvatarSrc(this.activeUser.avatarId)
     });
   }
 
+  makeLikeChanges (likeData) {
+    this.modifyState((state) => {
+      const image = this._getImageById(state, likeData.imageId);
+      image.likes = likeData.augment ? ++image.likes : --image.likes;
+      return state;
+    });
+
+    const likesQuantity = this._getImageById(this.state, likeData.imageId).likes;
+
+    this.view.updateLikeRender(likeData.$likeIcon);
+    this.view.updateLikeQuantity(likeData.$likeIcon, likesQuantity);
+  }
+
   async connect () {
-    const images = await getImages();
-    console.log(images);
+    const images = await API.images.getAll();
+
     this.state = this._composeImageDate(images);
     this._createSrc();
     this._convertDateToRightFormat();
@@ -132,9 +130,10 @@ export class ImagesController extends BaseController {
     this.state = newState;
   }
 
-  _getCommentByImageId(imageId) {
+  _getCommentByImageId (imageId) {
     return this.comments.find(comment => comment.imageId === imageId);
   }
+
   _getImageById (images, imageId) {
     return images.find(image => image.imageId === imageId);
   }
@@ -218,14 +217,14 @@ export class ImagesController extends BaseController {
   }
 
   _onDeleteComment (e) {
-      this.deleteComment(e.target);
+    this.deleteComment(e.target);
   }
 
   _onAddCommentClick (e) {
-      this.addComment(e.target);
+    this.addComment(e.target);
   }
 
   _onAddCommentInputBlur (e) {
-      this.updateComments(e.target);
-    }
+    this.updateComments(e.target);
+  }
 }
