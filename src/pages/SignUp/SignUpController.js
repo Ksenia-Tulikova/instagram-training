@@ -2,7 +2,7 @@ import { authManager, router } from '../../app.js';
 import { SignUpComponent } from './SignUpComponent';
 import { BaseController } from '../BaseController';
 import { validator } from './validator';
-import { createUser } from '../../api';
+import API from '../../api';
 
 const initialState = {
   login: {
@@ -22,7 +22,7 @@ const initialState = {
 
 export class SignUpController extends BaseController {
   constructor (place) {
-    super(undefined)
+    super(undefined);
     this.place = place;
     this.state = initialState;
     this.handlers = {
@@ -163,7 +163,7 @@ export class SignUpController extends BaseController {
     const validationResult = validator.validateGlobal(authData);
 
     if (validationResult.isValid) {
-      const userId = await createUser({...authData, ...additionalAuthData});
+      const userId = await API.users.add({ ...authData, ...additionalAuthData });
 
       authManager.setActiveUser(userId);
       this.modifyState(state => state.isLogged = true);

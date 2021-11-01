@@ -1,7 +1,7 @@
 import { EditUserComponent } from './EditUserComponent';
 import { router } from '../../app';
 import { BaseController } from '../BaseController';
-import { addImage, deleteImage, getUser, getUserImages, updateUser, uploadAvatar } from '../../api';
+import API from '../../api';
 
 export class EditUserController extends BaseController {
   constructor (place) {
@@ -81,7 +81,7 @@ export class EditUserController extends BaseController {
 
   async loadUserPhoto (file) {
     const userImageInfo = { userId: this.state._id, image: file };
-    const userImage = await addImage(userImageInfo);
+    const userImage = await API.images.add(userImageInfo);
     const urlEncodedName = encodeURI(userImage.name);
     const date = new Date(userImage.date).toISOString().slice(0, 10);
     const src = `http://localhost:8080/userImages/${urlEncodedName}`;
@@ -116,7 +116,7 @@ export class EditUserController extends BaseController {
       this.modifyState(state => {state.avatarId = savedFileId;});
     }
 
-    updateUser(this.state);
+    API.users.update(this.state);
     router.changeRoute('/users');
   }
 
@@ -135,14 +135,14 @@ export class EditUserController extends BaseController {
   }
 
   async uploadAvatarOnServer (avatar) {
-    return await uploadAvatar({
+    return await API.avatars.upload({
       avatar,
       login: this.state.login,
     });
   }
 
   deleteUserPhoto (image) {
-    deleteImage({ userId: this.state._id, name: image.dataset.name });
+    API.images.delete({ userId: this.state._id, name: image.dataset.name });
     this.view.deleteImageCard(image);
     //remove photo from db
     //remove from express
@@ -150,8 +150,8 @@ export class EditUserController extends BaseController {
 
   async connect (params) {
     console.log(params);
-    const user = await getUser(params.id);
-    const userPhotosInfo = await getUserImages(params.id);
+    const user = await API.users.get(params.id);
+    const userPhotosInfo = await API.images.getAllByUser(params.id);
     const photos = this._handlePhotos(userPhotosInfo);
     this.state = {
       ...user,
@@ -211,7 +211,7 @@ export class EditUserController extends BaseController {
   }
 
   _onDeleteUserPhoto (event) {
-    if(event.target.dataset.name) {
+    if (event.target.dataset.name) {
       this.deleteUserPhoto(event.target);
     }
   }

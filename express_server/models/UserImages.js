@@ -1,11 +1,15 @@
 const mongoose = require('mongoose');
+const path = require('path');
+const { ObjectId } = require('mongodb');
 const { Schema } = mongoose;
 
 const userImagesSchema = new Schema({
   userId: { type: Schema.Types.ObjectID, ref: 'User' },
   name: String,
   date: Date,
-  likedBy: [{ type: Schema.Types.ObjectID, ref: 'User' }],
+  likes: [{ type: Schema.Types.ObjectID, ref: 'Like' }],
+  comments: [{ type: Schema.Types.ObjectID, ref: 'Comment' }],
+
 });
 
 userImagesSchema.statics.create = function (imageInfo) {
@@ -26,16 +30,27 @@ userImagesSchema.statics.get = function (userId, cb) {
 };
 
 userImagesSchema.statics.getAll = function () {
-  // return this.find({}).populate('User').sort({ 'date': -1 });
   return this.find({})
     .populate({
       'path': 'userId',
       'model': 'User'
     })
     .populate({
-      'path': 'likedBy',
-      'model': 'User'
-    }).sort({ 'date': -1 });
+      'path': 'comments',
+      'model': 'Comment',
+      populate: {
+        path: 'commentedBy'
+      }
+    })
+    .populate({
+      'path': 'likes',
+      'model': 'Like',
+      populate: {
+        path: 'likedBy'
+      }
+    })
+
+    .sort({ 'date': -1 });
 };
 
 userImagesSchema.statics.remove = function ({ userId, name }) {
@@ -44,18 +59,45 @@ userImagesSchema.statics.remove = function ({ userId, name }) {
   );
 };
 
-userImagesSchema.statics.addLike = function ({ userId, imageId }) {
+userImagesSchema.statics.addLike = function ({ likeId, imageId }) {
   return this.updateOne(
     { _id: imageId },
-    { $push: { likedBy: userId } }
+    { $push: { likes: likeId } }
   );
 };
 
-userImagesSchema.statics.deleteLike = function ({ userId, imageId }) {
+userImagesSchema.statics.deleteLike = function ({ likeId, imageId }) {
   return this.updateOne(
     { _id: imageId },
-    { $pull: { likedBy: { $eq: userId } } }
+    {
+      $pull: {
+        likes: { $eq: likeId }
+      }
+    }).populate({
+    'path': 'likes',
+    'model': 'Like',
+  });
+};
+
+userImagesSchema.statics.addComment = function ({ commentId, imageId }) {
+  console.log({ commentId, imageId });
+  return this.updateOne(
+    { _id: imageId },
+    { $push: { comments: commentId } }
   );
+};
+
+userImagesSchema.statics.deleteComment = function ({ commentId, imageId }) {
+  return this.updateOne(
+    { _id: imageId },
+    {
+      $pull: {
+        comments: { $eq: commentId }
+      }
+    }).populate({
+    'path': 'comments',
+    'model': 'Comment',
+  });
 };
 
 const UserImages = mongoose.model('userImages', userImagesSchema);

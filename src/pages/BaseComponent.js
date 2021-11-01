@@ -222,7 +222,7 @@ export const TEMPLATES = {
                             </div>
                          </div>`,
   albumImage: `
-  <div class="photo-container">
+  <div class="photo-container" data-image-id={imageId}>
     <div class="content">
         <div class="content-overlay"></div>
         <img
@@ -251,13 +251,42 @@ export const TEMPLATES = {
             </div>
         </div>
     </div>
-</div>
-  `,
+    <div class="comments"> {userComments} </div>
+    <div class="add-comment-container"> 
+      <input id="add-comment" class ="add-comment-{imageId}" type="text"/> 
+      <button type="button" class="button button-add-comment" data-image-id={imageId}>
+         <div class="arrow-wrapper">
+           <span class="arrow"></span>
+         </div>
+            <p class="button-text">ADD COMMENT</p>
+      </button>
+    </div>
+</div>`,
   likedUserAvatar: `
   <div class="liked-user-container" id = {userId} >
     <img class="liked-user" src= {likedUserAvatar} />
   </div>
   `,
+  comment: `
+  <div class="comment" id={commentId}>
+        <div class="comment-author-container">
+            <h5 class="comment-author">{login}</h5>
+            <div class="comment-author-avatar-container">
+                <img src={avatar} alt=""
+                     class="comment-author-avatar ">
+            </div>
+        </div>
+        <div class="comment-details">
+            <div class="comment-text-container">
+                <p class="comment-text">{value}</p>
+            </div>
+        </div>
+        <div class="comment-delete">
+            <i class="far fa-times-circle delete-user-comment"
+               data-comment-id={commentId}
+            ></i>
+        </div>
+    </div>`,
 };
 
 export class BaseComponent {

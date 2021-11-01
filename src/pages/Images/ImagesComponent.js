@@ -6,6 +6,7 @@ export class ImagesComponent extends BaseComponent {
     this.htmlTemplate = TEMPLATES.albumImagesContainer;
     this.htmlTemplateImage = TEMPLATES.albumImage;
     this.htmlTemplateUserAvatar = TEMPLATES.likedUserAvatar;
+    this.htmlTemplateUserComment = TEMPLATES.comment;
   }
 
   render (state) {
@@ -15,6 +16,8 @@ export class ImagesComponent extends BaseComponent {
     if (state) {
       imagesHtml = state.map(image => {
         let imageHtml = this.htmlTemplateImage.replaceAll(`{likedUsersAvatar}`, this._fillUserAvatars(image.likedUsersAvatars));
+        imageHtml = imageHtml.replaceAll(`{userComments}`, this._fillUserComments(image.comments));
+
         return this._fillTemplateWithData(imageHtml, image);
       }).join('');
     }
@@ -34,6 +37,18 @@ export class ImagesComponent extends BaseComponent {
     }
 
     return userAvatarsHtml;
+  }
+
+  _fillUserComments (comments) {
+    let userCommentsHtml = '';
+
+    if (comments) {
+      userCommentsHtml = comments.map(comment => {
+        return this._fillTemplateWithData(this.htmlTemplateUserComment, comment);
+      }).join('');
+    }
+
+    return userCommentsHtml;
   }
 
   _fillTemplateWithData (template, data) {
@@ -61,11 +76,33 @@ export class ImagesComponent extends BaseComponent {
     this.place.querySelector('.liked-users').insertAdjacentHTML('afterbegin',userAvatarHtml);
   }
 
-  deleteAvatar(userId){
-    const userAvatar = this.place.querySelector(`#${CSS.escape(userId)}`);
-    if(userAvatar) {
-      userAvatar.remove();
+  renderNewComment(commentData) {
+    const userCommentHtml = this._fillTemplateWithData(this.htmlTemplateUserComment,...commentData);
+    this.place.querySelector('.comments').insertAdjacentHTML('beforeend',userCommentHtml);
+  }
+  // deleteAvatar(userId){
+  //   const userAvatar = this.place.querySelector(`#${CSS.escape(userId)}`);
+  //   if(userAvatar) {
+  //     userAvatar.remove();
+  //   }
+  // }
+  //
+  // deleteComment(commentId) {
+  //   const comment = this.place.querySelector(`#${CSS.escape(commentId)}`);
+  //   if(comment) {
+  //     comment.remove();
+  //   }
+  // }
+
+  deleteElement(elementId) {
+    const htmlElement = this.place.querySelector(`#${CSS.escape(elementId)}`);
+    if(htmlElement) {
+      htmlElement.remove();
     }
+  }
+
+  clearInputValue(imageId) {
+    this.place.querySelector(`.add-comment-${CSS.escape(imageId)}`).value = '';
   }
 
 }

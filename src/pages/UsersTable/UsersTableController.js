@@ -1,11 +1,11 @@
 import UsersTableComponent from './UsersTableComponent';
 import { pageResolver, router } from '../../app';
 import { BaseController } from '../BaseController';
-import { getUsers, removeUser } from '../../api';
+import API from '../../api';
 
-export class UsersTableController extends BaseController{
+export class UsersTableController extends BaseController {
   constructor (place) {
-    super(undefined)
+    super(undefined);
     this.place = place;
     this.state = {};
     this.handlers = {
@@ -32,7 +32,7 @@ export class UsersTableController extends BaseController{
     };
   }
 
-  viewImages() {
+  viewImages () {
     router.changeRoute('/images');
   }
 
@@ -47,7 +47,7 @@ export class UsersTableController extends BaseController{
 
   async deleteUser () {
     // authManager.deleteUser(this.state.activeUserId);
-    await removeUser(this.state.activeUserId);
+    await API.users.delete(this.state.activeUserId);
     pageResolver.goTo(pageResolver.pageMapping.usersTable.name);
   }
 
@@ -58,8 +58,8 @@ export class UsersTableController extends BaseController{
 
   async connect () {
     // this.state.users = Object.values(authManager.getUsers());
-    this.state.users = await getUsers();
-console.log(this.state.users);//view _id clear id that is uuid()
+    this.state.users = await API.users.getAll();
+    console.log(this.state.users);//view _id clear id that is uuid()
     this.view = new UsersTableComponent(this.place, this.handlers);
     return this.view.render(this.state);
   }
@@ -91,7 +91,7 @@ console.log(this.state.users);//view _id clear id that is uuid()
     }
   }
 
-  _onViewImages() {
+  _onViewImages () {
     this.viewImages();
   }
 }

@@ -1,4 +1,7 @@
 const UserImages = require('./models/userImages');
+const Like = require('./models/Like');
+const Comment = require('./models/Comment');
+
 const fs = require('fs');
 const User = require('./models/User');
 
@@ -18,7 +21,7 @@ class UserImagesController {
     }
 
     const userId = req.body.userId;
-    console.log(userId);
+
     const image = {
       name: req.files.image.name,
       file: req.files.image,
@@ -30,13 +33,12 @@ class UserImagesController {
   }
 
   get (req, res) {
-    console.log(req.params);
 
     UserImages.get((req.params.userId), (err, images) => {
       if (err) {
         return res.status(400).send('Something got wrong');
       }
-      console.log(images);
+
       images ? res.json(images) : res.end('');
     });
   }
@@ -58,25 +60,50 @@ class UserImagesController {
   }
 
   async addLike (req, res) {
+    const userId = req.body.userId;
+    const imageId = req.params.imageId;
+    const like = await Like.create(userId);
 
-    const likedImageInfo = {
-      userId: req.body.userId,
-      imageId: req.params.imageId,
-    };
-    await UserImages.addLike(likedImageInfo);
+    await UserImages.addLike({ likeId: like._id, imageId });
 
     res.status(200).send(`Like was added`);
   }
 
   async deleteLike (req, res) {
-    const likedImageInfo = {
+    const userId = req.body.userId;
+    const imageId = req.params.imageId;
+
+    const like = await Like.delete(userId);
+    const likeId = like._id;
+
+    await UserImages.deleteLike({ likeId, imageId });
+
+    res.status(200).send(like);
+
+  }
+
+  async addComment (req, res) {
+    const imageId = req.params.imageId;
+    const commentData = {
       userId: req.body.userId,
-      imageId: req.params.imageId,
+      value: req.body.comment,
     };
 
-    await UserImages.deleteLike(likedImageInfo);
+    const comment = await Comment.create(commentData);
+    await UserImages.addComment({ commentId: comment._id, imageId });
 
-    res.status(200).send('Like was deleted');
+    res.status(200).send(comment);
+  }
+
+  async deleteComment (req, res) {
+    const commentId = req.params.commentId;
+    const imageId = req.params.imageId;
+
+    await Comment.delete(commentId);
+    await UserImages.deleteComment({ commentId, imageId });
+
+    res.status(200).send('Comment was deleted!');
+
   }
 
   uploadAvatarOnServer (req, res) {
@@ -120,8 +147,8 @@ class UserImagesController {
   _deleteImageFromFolder (name) {
     const imagePath = `public/userImages/${name}`;
 
-    fs.unlink(imagePath, err => {    // delete image
-      if (err) throw err; // не удалось удалить
+    fs.unlink(imagePath, err => {
+      if (err) throw err;
       console.log('Image was deleted');
     });
 
