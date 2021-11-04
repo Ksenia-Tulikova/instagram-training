@@ -8,7 +8,7 @@ const userImagesSchema = new Schema({
   name: String,
   date: Date,
   likes: [{ type: Schema.Types.ObjectID, ref: 'Like' }],
-  comments: [{ type: Schema.Types.ObjectID, ref: 'Comment' }],
+  // comments: [{ type: Schema.Types.ObjectID, ref: 'Comment' }],
 
 });
 
@@ -34,13 +34,6 @@ userImagesSchema.statics.getAll = function () {
     .populate({
       'path': 'userId',
       'model': 'User'
-    })
-    .populate({
-      'path': 'comments',
-      'model': 'Comment',
-      populate: {
-        path: 'commentedBy'
-      }
     })
     .populate({
       'path': 'likes',
@@ -79,13 +72,13 @@ userImagesSchema.statics.deleteLike = function ({ likeId, imageId }) {
   });
 };
 
-userImagesSchema.statics.addComment = function ({ commentId, imageId }) {
-  console.log({ commentId, imageId });
-  return this.updateOne(
-    { _id: imageId },
-    { $push: { comments: commentId } }
-  );
-};
+// userImagesSchema.statics.addComment = function ({ commentId, imageId }) {
+//   console.log({ commentId, imageId });
+//   return this.updateOne(
+//     { _id: imageId },
+//     { $push: { comments: commentId } }
+//   );
+// };
 
 userImagesSchema.statics.deleteComment = function ({ commentId, imageId }) {
   return this.updateOne(

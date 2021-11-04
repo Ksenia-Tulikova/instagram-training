@@ -253,7 +253,7 @@ export const TEMPLATES = {
     </div>
     <div class="comments"> {userComments} </div>
     <div class="add-comment-container"> 
-      <input id="add-comment" class ="add-comment-{imageId}" type="text"/> 
+      <input id="add-comment"  class ="add-comment-{imageId}" type="text"/> 
       <button type="button" class="button button-add-comment" data-image-id={imageId}>
          <div class="arrow-wrapper">
            <span class="arrow"></span>
@@ -268,25 +268,35 @@ export const TEMPLATES = {
   </div>
   `,
   comment: `
-  <div class="comment" id={commentId}>
-        <div class="comment-author-container">
+    <div>
+        <div class="comment" id={commentId} >
+          <div class="comment-author-container">
             <h5 class="comment-author">{login}</h5>
             <div class="comment-author-avatar-container">
-                <img src={avatar} alt=""
+                <img src={avatar} alt="Avatar"
                      class="comment-author-avatar ">
             </div>
         </div>
-        <div class="comment-details">
+          <div class="comment-details">
             <div class="comment-text-container">
                 <p class="comment-text">{value}</p>
             </div>
         </div>
-        <div class="comment-delete">
-            <i class="far fa-times-circle delete-user-comment"
-               data-comment-id={commentId}
-            ></i>
+          <div class="comment-actions">
+            <div class="comment-delete">
+              <i class="far fa-times-circle delete-user-comment"
+                 data-comment-id={commentId}
+              ></i>
+            </div>
+            <button  type="button" class="button button-reply">
+              <div class="arrow-wrapper"/>
+              <p class="button-text">REPLY</p>
+            </button>
+          </div>
         </div>
-    </div>`,
+        <div class="container-{commentId} comment-container"> [subTree] </div>
+    </div>
+  `,
 };
 
 export class BaseComponent {

@@ -503,9 +503,41 @@ input#add-comment {
     cursor: pointer;
     transition: all 0.5s;
 }
+.comment-actions {
+    min-width: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+/*display: flex;*/
+/*flex-direction: column;*/
+/*justify-content: space-between;*/
+/*align-items: center;*/
 
 .comment-delete:hover {
     color: red;
+}
+
+.images .photo-container button.button-reply {
+    min-width: 80%;
+}
+
+.images .photo-container button .button-text {
+    font-size: 0.55em;
+    pointer-events: none;
+}
+
+.images .photo-container button .arrow-wrapper {
+    pointer-events: none;
+}
+
+.images .photo-container button .arrow-wrapper {
+    height: 25px;
+}
+
+.comment-container {
+    padding-left: 20px;
 }
 
 /*.delete-user-comment{*/

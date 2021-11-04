@@ -167,7 +167,8 @@ export default {
         method: 'POST',
         data: {
           userId: commentData.userId,
-          comment: commentData.value
+          comment: commentData.value,
+          parent_id: commentData.parent_id,
         },
         url: `http://localhost:8080/images/${commentData.imageId}/comments`,
         headers: {
@@ -188,5 +189,13 @@ export default {
 
       return response.data;
     },
+    getAll: async () => {
+      const response = await axios({
+        method: 'GET',
+        url: `http://localhost:8080/images/comments`,
+      });
+
+      return response.data;
+    }
   }
 }

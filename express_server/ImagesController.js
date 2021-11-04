@@ -83,14 +83,18 @@ class UserImagesController {
   }
 
   async addComment (req, res) {
-    const imageId = req.params.imageId;
+    // const imageId = req.params.imageId;
+
     const commentData = {
       userId: req.body.userId,
       value: req.body.comment,
+      parent_id: req.body.parent_id,
+      image_id: req.params.imageId
     };
 
     const comment = await Comment.create(commentData);
-    await UserImages.addComment({ commentId: comment._id, imageId });
+
+    // await UserImages.addComment({ commentId: comment._id, imageId });
 
     res.status(200).send(comment);
   }
@@ -104,6 +108,12 @@ class UserImagesController {
 
     res.status(200).send('Comment was deleted!');
 
+  }
+
+  async getAllComments (req, res) {
+    const comments = await Comment.getAll();
+
+    res.json(comments);
   }
 
   uploadAvatarOnServer (req, res) {
