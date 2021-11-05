@@ -1,5 +1,5 @@
 import { ImagesComponent } from './ImagesComponent';
-import  API from '../../api';
+import API from '../../api';
 import { BaseController } from '../BaseController';
 import { authManager } from '../../app';
 
@@ -7,8 +7,9 @@ export class ImagesController extends BaseController {
   constructor (place) {
     super(undefined);
     this.place = place;
-    this.state = '';
     this.activeUserId = authManager.getActiveUserId();
+    this.state = '';
+
     this.comments = [];
 
     this.avatarPath = 'http://localhost:8080/avatars/';
@@ -33,7 +34,12 @@ export class ImagesController extends BaseController {
         queryParam: '#add-comment',
         eventType: 'blur',
         callback: this._onAddCommentInputBlur.bind(this),
-      }
+      },
+      onButtonReplyClick: {
+        queryParam: '.comments',
+        eventType: 'click',
+        callback: this._onButtonReplyClick.bind(this),
+      },
     };
 
     this.getUser();
@@ -43,19 +49,29 @@ export class ImagesController extends BaseController {
     this.activeUser = await API.users.get(this.activeUserId);
   }
 
+  activateInput($replyBtn) {
+    const imageId = $replyBtn.closest('.photo-container').dataset.imageId;
+    this.activeReplyId = $replyBtn.closest('.comment').id;
+
+    this.view.focusElement(imageId);
+  }
+
   updateComments ($commentInput) {
-    this.comments.push({
-      value: $commentInput.value,
-      userId: this.activeUserId,
-      imageId: $commentInput.closest('.photo-container').dataset.imageId
-    });
+    const value = $commentInput.value;
+    if(value){
+      this.comments.push({
+        value,
+        userId: this.activeUserId,
+        parent_id: this.activeReplyId ? this.activeReplyId : null,
+        imageId: $commentInput.closest('.photo-container').dataset.imageId
+      });
+    }
   }
 
   deleteComment ($deleteCommentIcon) {
     const commentId = $deleteCommentIcon.dataset.commentId;
     const imageId = $deleteCommentIcon.closest('.photo-container').dataset.imageId;
 
-    //удалить комментарий в массиве
     API.comments.delete(commentId, imageId);
 
     this.view.deleteElement(commentId);
@@ -63,14 +79,17 @@ export class ImagesController extends BaseController {
 
   async addComment ($commentBtn) {
     const imageId = $commentBtn.closest('.photo-container').dataset.imageId;
-    const comment = this._getCommentByImageId(imageId);
+    const comment = this._getCommentByParam('imageId', imageId);
+    const commentInsertSelector = this.activeReplyId ? `.container-${comment.parent_id}`: '.comments';
 
     if (comment) {
       const commentResponse = await API.comments.add(comment);
       commentResponse.commentedBy = this.activeUser;
 
-      this.view.renderNewComment(this._createUserComments([commentResponse]));
+      //сделай функцию по рендеру смещенного комментария(общая функция для рендера)
+      this.view.renderNewComment(this._createUserComments([commentResponse]), commentInsertSelector);
       this.view.clearInputValue(imageId);
+      this._clearAllCommentData();
     }
   }
 
@@ -113,8 +132,9 @@ export class ImagesController extends BaseController {
 
   async connect () {
     const images = await API.images.getAll();
+    const comments = await API.comments.getAll();
 
-    this.state = this._composeImageDate(images);
+    this.state = this._composeImageDate(images, comments);
     this._createSrc();
     this._convertDateToRightFormat();
 
@@ -130,8 +150,13 @@ export class ImagesController extends BaseController {
     this.state = newState;
   }
 
-  _getCommentByImageId (imageId) {
-    return this.comments.find(comment => comment.imageId === imageId);
+  _clearAllCommentData() {
+    this.activeReplyPath = '';
+    this.comments=[];
+  }
+
+  _getCommentByParam (param, value) {
+    return this.comments.find(comment => comment[param] === value);
   }
 
   _getImageById (images, imageId) {
@@ -163,8 +188,9 @@ export class ImagesController extends BaseController {
     }
   }
 
-  _composeImageDate (images) {
+  _composeImageDate (images, comments) {
     return images.map(img => {
+      const imageComments = comments.filter(comment => comment.image_id === img._id);
       return {
         userId: img.userId._id,
         date: img.date,
@@ -176,7 +202,7 @@ export class ImagesController extends BaseController {
         image: img.name,
         likedImageMyself: this._doesImageLikedByActiveUser(img.likes) ? 'liked' : '',
         likedUsersAvatars: this._getUserAvatars(img.likes),
-        comments: this._createUserComments(img.comments),
+        comments: this._createUserComments(imageComments),
       };
     });
   }
@@ -188,7 +214,8 @@ export class ImagesController extends BaseController {
           value: comment.value,
           login: comment.commentedBy.login,
           avatar: this._getAvatarSrc(comment.commentedBy.avatarId),
-          commentId: comment._id
+          commentId: comment._id,
+          parent_id: comment.parent_id,
         };
       });
     }
@@ -226,5 +253,11 @@ export class ImagesController extends BaseController {
 
   _onAddCommentInputBlur (e) {
     this.updateComments(e.target);
+  }
+
+  _onButtonReplyClick (e) {
+    if (e.target.classList.contains('button-reply')){
+      this.activateInput(e.target);
+    }
   }
 }

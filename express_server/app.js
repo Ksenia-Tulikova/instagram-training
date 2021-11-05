@@ -75,3 +75,5 @@ app.post('/images/:imageId/comments', imageController.addComment);
 
 app.post('/images/:imageId/comments/:commentId', imageController.deleteComment);
 
+app.get('/images/comments', imageController.getAllComments);
+
